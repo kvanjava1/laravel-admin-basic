@@ -13,7 +13,7 @@ import BaseInput from '../../components/ui/BaseInput.vue';
 import BaseSelect from '../../components/ui/BaseSelect.vue';
 import BasePageHeader from '../../components/ui/BasePageHeader.vue';
 import BasePageContainer from '../../components/ui/BasePageContainer.vue';
-import BaseImageCropper from '../../components/ui/BaseImageCropper.vue';
+import MediaImageCropper from '../../components/ui/MediaImageCropper.vue';
 import BaseAvatarUpload from '../../components/ui/BaseAvatarUpload.vue';
 
 const router = useRouter();
@@ -129,5 +129,12 @@ const handleSave = async () => {
     </BasePageContainer>
 
     <!-- Unified 1:1 Cropper -->
-    <BaseImageCropper :show="showCropper" :image="rawImage" @close="showCropper = false" @apply="handleCropApply" />
+    <MediaImageCropper 
+        :show="showCropper" 
+        :image="rawImage" 
+        :aspect-ratio="1"
+        aspect-ratio-label="Profile (1:1)"
+        @close="showCropper = false" 
+        @apply="handleCropApply" 
+    />
 </template>

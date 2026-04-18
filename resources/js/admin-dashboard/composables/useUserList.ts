@@ -120,7 +120,7 @@ export function useUserList() {
         {
             label: 'Edit Status',
             icon: 'gavel',
-            colorClass: user.status.name === 'Banned' ? 'text-rose-600' : 'text-amber-600',
+            colorClass: user.status?.name === 'Banned' ? 'text-rose-600' : 'text-amber-600',
             divider: true,
             handler: () => router.push({ name: 'users.status', params: { id: user.id } })
         },

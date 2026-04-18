@@ -18,12 +18,21 @@ const menuItems = [
 const dropdowns = ref({
     catalog: false,
     inventory: false,
+    posts: false, // Closed by default
 });
 
-const toggleDropdown = (key: 'catalog' | 'inventory') => {
+const toggleDropdown = (key: 'catalog' | 'inventory' | 'posts') => {
     if (key === 'catalog') {
         dropdowns.value.catalog = !dropdowns.value.catalog;
-        if (dropdowns.value.catalog) dropdowns.value.inventory = false;
+        if (dropdowns.value.catalog) {
+            dropdowns.value.inventory = false;
+            dropdowns.value.posts = false;
+        }
+    } else if (key === 'posts') {
+        dropdowns.value.posts = !dropdowns.value.posts;
+        if (dropdowns.value.posts) {
+            dropdowns.value.catalog = false;
+        }
     } else {
         dropdowns.value.inventory = !dropdowns.value.inventory;
     }
@@ -70,8 +79,42 @@ const handleLogout = async () => {
                 </a>
             </router-link>
 
-            <!-- Multi-level Menu Example (Simplified/Kept for Structure) -->
+            <!-- Post Management (New) -->
             <div class="mt-4">
+                <p class="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Content</p>
+                <div class="flex flex-col gap-1">
+                    <button @click="toggleDropdown('posts')"
+                        :class="[
+                            dropdowns.posts 
+                            ? 'text-white bg-white/5' 
+                            : 'text-slate-400 hover:text-white hover:bg-white/5',
+                            'flex items-center justify-between px-3 py-2.5 rounded-lg transition-all w-full group active:scale-95'
+                        ]">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-[22px]" :class="dropdowns.posts ? 'text-primary' : 'text-inherit'">dynamic_feed</span>
+                            <span class="font-medium">Post Management</span>
+                        </div>
+                        <span class="material-symbols-outlined text-sm transition-transform"
+                            :class="{ 'rotate-90': dropdowns.posts }">chevron_right</span>
+                    </button>
+
+                    <div v-show="dropdowns.posts" class="ml-4 pl-4 border-l border-white/10 flex flex-col gap-1 mt-1">
+                        <router-link :to="{ name: 'articles.index' }" v-slot="{ isActive, navigate, href }">
+                            <a :href="href" @click="navigate"
+                                :class="[
+                                    isActive ? 'text-white bg-white/5' : 'text-slate-400 hover:text-white hover:bg-white/5',
+                                    'px-3 py-2 font-medium rounded-md transition-all flex items-center gap-2'
+                                ]">
+                                <span class="material-symbols-outlined text-sm">article</span>
+                                Articles
+                            </a>
+                        </router-link>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi-level Menu Example (Hidden by user request, code preserved) -->
+            <div v-if="false" class="mt-4">
                 <p class="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Catalog</p>
 
                 <div class="flex flex-col gap-1">

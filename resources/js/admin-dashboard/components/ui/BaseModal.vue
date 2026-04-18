@@ -6,10 +6,24 @@
 interface Props {
   show: boolean;
   title?: string;
+  size?: 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
 }
 
-defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  size: 'lg'
+});
 const emit = defineEmits(['close']);
+
+const sizeClasses = {
+  'md': 'max-w-md',
+  'lg': 'max-w-lg',
+  'xl': 'max-w-xl',
+  '2xl': 'max-w-2xl',
+  '3xl': 'max-w-3xl',
+  '4xl': 'max-w-4xl',
+  '5xl': 'max-w-5xl',
+  '6xl': 'max-w-6xl',
+};
 </script>
 
 <template>
@@ -40,7 +54,8 @@ const emit = defineEmits(['close']);
         >
           <div 
             v-if="show"
-            class="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+            class="relative w-full bg-white rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+            :class="sizeClasses[props.size]"
           >
             <!-- Header -->
             <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">

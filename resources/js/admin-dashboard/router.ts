@@ -37,6 +37,11 @@ const MediaIndex = () => import('./views/media/MediaIndex.vue');
 const MediaCreate = () => import('./views/media/MediaCreate.vue');
 const MediaEdit = () => import('./views/media/MediaEdit.vue');
 
+// Post Management (Articles)
+const ArticleIndex = () => import('./views/post/article/ArticleIndex.vue');
+const ArticleCreate = () => import('./views/post/article/ArticleCreate.vue');
+const ArticleEdit = () => import('./views/post/article/ArticleEdit.vue');
+
 /**
  * Route Modules
  */
@@ -145,6 +150,28 @@ const mediaRoutes = [
     },
 ];
 
+// Post/Article Routes
+const articleRoutes = [
+    {
+        path: 'articles',
+        name: 'articles.index',
+        component: ArticleIndex,
+        meta: { auth: true }
+    },
+    {
+        path: 'articles/create',
+        name: 'articles.create',
+        component: ArticleCreate,
+        meta: { auth: true }
+    },
+    {
+        path: 'articles/:id/edit',
+        name: 'articles.edit',
+        component: ArticleEdit,
+        meta: { auth: true }
+    },
+];
+
 const routes = [
     ...authRoutes,
     {
@@ -161,6 +188,7 @@ const routes = [
             ...roleRoutes,
             ...categoryRoutes,
             ...mediaRoutes,
+            ...articleRoutes,
             {
                 path: 'profile',
                 name: 'profile.edit',

@@ -103,7 +103,7 @@ const focusInput = () => {
         
         <div 
             @click="focusInput"
-            class="min-h-[52px] w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-2xl flex flex-wrap gap-2 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all cursor-text shadow-sm relative z-10"
+            class="min-h-[52px] w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-2xl flex flex-wrap gap-2 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all cursor-text shadow-sm relative z-20"
         >
             <!-- Tag Chips -->
             <TransitionGroup name="tag-list">
@@ -134,33 +134,33 @@ const focusInput = () => {
                 @input="showDropdown = true"
                 @focus="showDropdown = filteredSuggestions.length > 0"
             />
-        </div>
 
-        <!-- Autocomplete Dropdown -->
-        <Transition name="fade-down">
-            <div 
-                v-if="showDropdown && filteredSuggestions.length > 0"
-                class="absolute left-0 right-0 top-[calc(100%+8px)] bg-white/90 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-2xl overflow-hidden z-50"
-            >
-                <div class="p-2">
-                    <button
-                        v-for="(suggestion, i) in filteredSuggestions"
-                        :key="suggestion"
-                        @click="selectSuggestion(suggestion)"
-                        class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center justify-between group"
-                        :class="selectedIndex === i ? 'bg-primary text-white shadow-lg' : 'text-slate-600 hover:bg-slate-50'"
-                    >
-                        <span>{{ suggestion }}</span>
-                        <span 
-                            class="material-symbols-outlined text-[18px] opacity-0 group-hover:opacity-100 transition-opacity"
-                            :class="selectedIndex === i ? 'text-white' : 'text-primary'"
+            <!-- Autocomplete Dropdown (Moved inside relative wrapper for correct positioning) -->
+            <Transition name="fade-down">
+                <div 
+                    v-if="showDropdown && filteredSuggestions.length > 0"
+                    class="absolute left-0 right-0 top-[calc(100%+4px)] bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden z-50 max-h-60 overflow-y-auto"
+                >
+                    <div class="p-2">
+                        <button
+                            v-for="(suggestion, i) in filteredSuggestions"
+                            :key="suggestion"
+                            @click="selectSuggestion(suggestion)"
+                            class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center justify-between group"
+                            :class="selectedIndex === i ? 'bg-primary text-white shadow-lg' : 'text-slate-600 hover:bg-slate-50'"
                         >
-                            add_circle
-                        </span>
-                    </button>
+                            <span>{{ suggestion }}</span>
+                            <span 
+                                class="material-symbols-outlined text-[18px] opacity-0 group-hover:opacity-100 transition-opacity"
+                                :class="selectedIndex === i ? 'text-white' : 'text-primary'"
+                            >
+                                add_circle
+                            </span>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </Transition>
+            </Transition>
+        </div>
         
         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-1">
             Press <span class="text-slate-600">Enter</span> to add or use <span class="text-slate-600">Arrows</span> to navigate suggestions

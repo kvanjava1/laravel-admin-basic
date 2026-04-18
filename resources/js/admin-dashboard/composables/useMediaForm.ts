@@ -13,7 +13,7 @@ interface CropCoordinates {
     height: number;
 }
 
-export function useMediaForm() {
+export function useMediaForm(options: { redirect?: boolean } = { redirect: true }) {
     const router = useRouter();
 
     const imageFile = ref<File | null>(null);
@@ -127,7 +127,7 @@ export function useMediaForm() {
         isLoading.value = true;
 
         try {
-            await mediaService.store({
+            const response = await mediaService.store({
                 image: imageFile.value,
                 title: title.value,
                 alt_text: altText.value,
@@ -146,7 +146,12 @@ export function useMediaForm() {
             });
 
             alertService.successToast('Media uploaded successfully.');
-            router.push({ name: 'media.index' });
+            
+            if (options.redirect) {
+                router.push({ name: 'media.index' });
+            }
+
+            return response.data || response;
         } catch (err: any) {
             const response = err.response?.data;
             alertService.errorToast(

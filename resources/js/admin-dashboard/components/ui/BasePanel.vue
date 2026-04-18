@@ -7,10 +7,12 @@ interface Props {
     title: string;
     icon?: string;
     stackedHeader?: boolean;
+    noOverflow?: boolean;
 }
 
 withDefaults(defineProps<Props>(), {
-    stackedHeader: false
+    stackedHeader: false,
+    noOverflow: false
 });
 </script>
 
@@ -37,7 +39,7 @@ withDefaults(defineProps<Props>(), {
         </div>
 
         <!-- This is where your actual <table> goes -->
-        <div class="w-full overflow-x-auto">
+        <div class="w-full" :class="{'overflow-x-auto': !noOverflow}">
             <slot></slot>
         </div>
 
