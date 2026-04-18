@@ -15,7 +15,8 @@ Halaman Create/Edit akan menggunakan **Vertical One-Column Workflow** (identik d
 ### Panel 1: Article Content
 - `BaseInput`: Judul Artikel.
 - `BaseEditor (Tiptap)`: Rich Text Editor utama.
-- **Media Integration**: Toolbar Tiptap terhubung ke Media Library Modal.
+- **Media Bridge**: Tombol gambar membuka Media Library Modal.
+- **Ratio Security**: Setelah memilih gambar, sistem mewajibkan pemilihan rasio (16:9, 4:3, atau Original) untuk menjaga integritas desain frontend.
 - `BaseInput`: Excerpt (Ringkasan pendek).
 
 ### Panel 2: Classification
@@ -23,7 +24,7 @@ Halaman Create/Edit akan menggunakan **Vertical One-Column Workflow** (identik d
 - `BaseTagsInput`: Article Tags (with Auto-Suggestions from `tagService`).
 
 ### Panel 3: Media & SEO
-- `BaseMediaPicker`: Memilih gambar utama dari library Media.
+- `BaseMediaPicker`: Terintegrasi dengan Media Library Modal (identik dengan Editor) untuk memastikan Featured Image memiliki cropping dan SEO metadata yang standar.
 - `BaseInput`: SEO Title (Target: 60 chars).
 - `BaseInput`: SEO Description (Target: 160 chars).
 

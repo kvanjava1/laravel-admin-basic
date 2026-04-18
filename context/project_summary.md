@@ -86,9 +86,23 @@ Current capabilities:
 Important media behavior:
 
 - generated output format is WEBP
+- generated output format is WEBP
 - variant sizes are persisted in the database
 - tags are stored relationally via `tags` and `media_tag`
 - delete does not remove files immediately; it sets `file_cleanup_marked_at`
+
+### Article Management
+
+Article management is a professional-grade module integrated with the Media system.
+
+Current capabilities:
+
+- Create and edit articles with a professional **Tiptap** rich text editor.
+- **Media Bridge**: Centralized media library integration for inserting images into content.
+- **Ratio Security**: Mandatory aspect ratio selection (16:9, 4:3, Original) for inserted images to preserve frontend design.
+- **Integrated Featured Image**: Main article image selection using the Media Library Modal.
+- **Vertical Workflow**: Streamlined single-column interface for a focused writing experience.
+- **SEO & Classification**: Metadata, categories, and automated tag suggestions.
 
 ## Important Caveats
 

@@ -14,7 +14,8 @@ Menu akan disusun secara hierarkis di sidebar:
 2. **Post Management**: Workflow pembuatan artikel yang terbagi dalam panel logis.
 3. **Advanced Search**: Pencarian mendalam berdasarkan berbagai parameter metadata.
 4. **Rich Editor**: Menggunakan **Tiptap** (Headless Editor) untuk pengalaman menulis yang premium dan terintegrasi dengan Media Library.
-5. **Media Bridge**: Semua gambar di dalam artikel harus berasal dari Media Management untuk menjaga standarisasi cropping dan SEO.
+5. **Media Bridge & Ratio Security**: Pengguna wajib memilih rasio gambar (16:9/4:3/Original) saat insert media untuk menjaga integritas desain frontend.
+6. **Media Standard**: Semua gambar (konten & featured) harus melalui Media Library untuk standarisasi cropping dan SEO.
 6. **Mockup Driven**: Pengembangan awal menggunakan data dummy yang realistis.
 
 ## Architecture
