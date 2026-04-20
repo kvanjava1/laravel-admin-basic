@@ -10,6 +10,18 @@ export default {
         './resources/js/**/*.vue',
     ],
 
+    safelist: [
+        // Figure & Images
+        'my-8', 'mx-auto', 'max-w-full',
+        'rounded-2xl', 'border', 'border-slate-200', 'shadow-sm', 'h-auto',
+        
+        // Figcaption & Typography
+        'text-left', 'text-center', 'text-right', 'text-sm', 'text-slate-500', 'mt-3', 'font-medium',
+        
+        // Potential alignments for other content
+        'mx-0', 'ml-auto', 'mr-auto'
+    ],
+
     theme: {
         extend: {
             colors: {

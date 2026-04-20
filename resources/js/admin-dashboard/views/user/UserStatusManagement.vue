@@ -8,6 +8,7 @@ import BasePanel from '../../components/ui/BasePanel.vue';
 import BaseButton from '../../components/ui/BaseButton.vue';
 import BaseInput from '../../components/ui/BaseInput.vue';
 import UserStatusBadge from '../../components/user/UserStatusBadge.vue';
+import BaseLabel from '../../components/ui/BaseLabel.vue';
 import { format } from 'date-fns';
 
 const route = useRoute();
@@ -93,8 +94,8 @@ onMounted(fetchHistory);
                     <p class="text-sm text-slate-600 italic border-l-4 border-primary/30 pl-4 py-1">
                         Restoring a banned account should be documented with a clear justification.
                     </p>
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider px-1">Justification for Restore</label>
+                    <div class="space-y-1">
+                        <BaseLabel value="Justification for Restore" />
                         <textarea 
                             v-model="unbanReason"
                             placeholder="Explain why this account is being restored..."

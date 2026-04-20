@@ -31,13 +31,16 @@ const emit = defineEmits(['back']);
                 <h2 class="text-2xl font-bold text-text-primary">{{ title }}</h2>
                 <p v-if="subtitle" class="text-text-secondary text-sm font-medium mt-1">{{ subtitle }}</p>
             </div>
-            <BaseButton 
-                variant="ghost" 
-                :icon="backIcon" 
-                @click="backRouteName ? $router.push({ name: backRouteName }) : emit('back')"
-            >
-                {{ backLabel }}
-            </BaseButton>
+            <div class="flex items-center gap-2">
+                <slot name="actions" />
+                <BaseButton 
+                    variant="ghost" 
+                    :icon="backIcon" 
+                    @click="backRouteName ? $router.push({ name: backRouteName }) : emit('back')"
+                >
+                    {{ backLabel }}
+                </BaseButton>
+            </div>
         </div>
 
         <!-- Layout for Index/Dashboard (Primary) -->

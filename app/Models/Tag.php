@@ -20,4 +20,10 @@ class Tag extends Model
         return $this->belongsToMany(Media::class)
             ->withTimestamps();
     }
+
+    public function articles(): BelongsToMany
+    {
+        return $this->belongsToMany(Article::class)
+            ->withTimestamps();
+    }
 }

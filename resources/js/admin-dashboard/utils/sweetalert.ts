@@ -5,17 +5,17 @@ import Swal from 'sweetalert2';
  * Provides standardized, premium configurations for different alert types.
  */
 
-const colors = {
-    primary: '#3b82f6',
+export const colors = {
+    primary: '#526D82', // Matching Publish Article Button
     danger: '#e11d48',
     success: '#10b981',
     warning: '#f59e0b',
-    info: '#3b82f6',
+    info: '#526D82',    
     background: '#ffffff',
     text: '#1e293b'
 };
 
-const commonConfig = {
+export const commonConfig = {
     confirmButtonColor: colors.primary,
     cancelButtonColor: '#94a3b8',
     reverseButtons: true,
@@ -23,6 +23,7 @@ const commonConfig = {
     customClass: {
         confirmButton: 'px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm',
         cancelButton: 'px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm',
+        denyButton: 'px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm',
         popup: 'rounded-2xl border-none shadow-2xl',
         title: 'text-slate-800 font-bold',
         htmlContainer: 'text-slate-500'
@@ -106,6 +107,19 @@ export const alertService = {
     },
 
     /**
+     * Show an info modal with HTML support
+     */
+    info(title: string, html: string) {
+        return Swal.fire({
+            ...commonConfig,
+            title,
+            html,
+            icon: 'info',
+            width: '800px', // Perlebar modal
+        });
+    },
+
+    /**
      * Show a simple alert modal
      */
     alert(titleOrOptions: string | { title: string, text?: string, icon?: any }, text?: string, icon: any = 'info') {
@@ -126,3 +140,5 @@ export const alertService = {
         });
     }
 };
+
+export { Swal };

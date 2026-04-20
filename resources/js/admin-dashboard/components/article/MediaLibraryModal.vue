@@ -46,7 +46,7 @@ const confirmSelection = (ratioType: '16_9' | '4_3' | 'original') => {
     if (ratioType === '16_9') url = selectedItem.value.ratio_16_9_big_url || selectedItem.value.ratio_16_9_url || url;
     if (ratioType === '4_3') url = selectedItem.value.ratio_4_3_big_url || selectedItem.value.ratio_4_3_url || url;
 
-    emit('select', url, selectedItem.value.alt_text || selectedItem.value.title);
+    emit('select', url, selectedItem.value);
     emit('close');
     selectedItem.value = null;
 };

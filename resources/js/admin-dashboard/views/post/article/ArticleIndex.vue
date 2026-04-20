@@ -65,12 +65,15 @@ const handleReset = () => {
 
             <!-- Compact Search Indicator -->
             <template #top-content>
-                <div v-if="isSearching" class="px-6 py-1.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                <div v-if="isSearching"
+                    class="px-6 py-1.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
                     <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                         <span class="material-symbols-outlined text-md">search_insights</span>
                         <span class="animate-pulse text-primary">Filter Active</span>
                     </div>
-                    <button @click="clearFilters" class="text-[10px] font-black text-primary hover:text-primary-dark transition-colors uppercase tracking-tight">Clear Filters</button>
+                    <button @click="clearFilters"
+                        class="text-[10px] font-black text-primary hover:text-primary-dark transition-colors uppercase tracking-tight">Clear
+                        Filters</button>
                 </div>
             </template>
 
@@ -100,30 +103,33 @@ const handleReset = () => {
                             </TableTd>
                             <TableTd>
                                 <div class="flex items-center gap-3">
-                                    <div class="h-10 w-16 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 overflow-hidden shadow-sm border border-slate-200">
-                                        <img v-if="article.featured_image" :src="article.featured_image" class="h-full w-full object-cover">
-                                        <span v-else class="material-symbols-outlined">image</span>
-                                    </div>
                                     <div class="flex flex-col">
-                                        <span class="font-bold text-text-primary text-sm line-clamp-1">{{ article.title }}</span>
-                                        <span class="text-[11px] text-text-secondary/60 uppercase font-black tracking-tighter">By {{ article.author }}</span>
+                                        <span class="font-bold text-text-primary text-base line-clamp-1">{{
+                                            article.title }}</span>
+                                        <span
+                                            class="text-[11px] text-text-secondary/60 uppercase font-black tracking-tighter">By
+                                            {{
+                                            article.author?.name || 'Unknown' }}</span>
                                     </div>
                                 </div>
                             </TableTd>
                             <TableTd>
-                                <div class="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wide shadow-sm border border-black/5">
+                                <div
+                                    class="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wide shadow-sm border border-black/5">
                                     <span class="h-1.5 w-1.5 rounded-full mr-2 bg-slate-400"></span>
-                                    {{ article.category }}
+                                    {{ article.category?.name || 'Uncategorized' }}
                                 </div>
                             </TableTd>
                             <TableTd>
                                 <ArticleStatusBadge :status="article.status" />
                             </TableTd>
                             <TableTd>
-                                <span class="font-medium text-text-primary text-sm">{{ formatDate(article.published_at) }}</span>
+                                <span class="font-medium text-text-primary text-sm">{{ formatDate(article.published_at)
+                                    }}</span>
                             </TableTd>
                             <TableTd class="text-right">
-                                <ActionMenu :actions="getRowActions(article)" :index="index" :total="articlesList.length" size="md" />
+                                <ActionMenu :actions="getRowActions(article)" :index="index"
+                                    :total="articlesList.length" size="md" />
                             </TableTd>
                         </TableRow>
 
@@ -146,7 +152,8 @@ const handleReset = () => {
         </BasePanel>
 
         <!-- Advanced Filter Modal -->
-        <ArticleFilterModal :show="showAdvancedFilter" @close="showAdvancedFilter = false" @filter="handleFilter" @reset="handleReset" />
+        <ArticleFilterModal :show="showAdvancedFilter" @close="showAdvancedFilter = false" @filter="handleFilter"
+            @reset="handleReset" />
 
         <!-- Details Modal -->
         <ArticleDetailsModal :show="showDetailsModal" :article="selectedArticle" @close="showDetailsModal = false" />

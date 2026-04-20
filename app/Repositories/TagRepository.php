@@ -25,4 +25,19 @@ class TagRepository
             ->limit($limit)
             ->get();
     }
+    /**
+     * Find or create tags by their names.
+     */
+    public function findOrCreateByNames(array $names): array
+    {
+        $tagIds = [];
+        foreach ($names as $name) {
+            $tag = Tag::firstOrCreate(
+                ['name' => $name],
+                ['slug' => \Illuminate\Support\Str::slug($name)]
+            );
+            $tagIds[] = $tag->id;
+        }
+        return $tagIds;
+    }
 }

@@ -12,6 +12,7 @@ import BaseButton from '../../components/ui/BaseButton.vue';
 import BaseSelect from '../../components/ui/BaseSelect.vue';
 import ActionMenu from '../../components/ui/ActionMenu.vue';
 import UserStatusBadge from '../../components/user/UserStatusBadge.vue';
+import BaseLabel from '../../components/ui/BaseLabel.vue';
 
 // Atomic Table
 import TableMain from '../../components/ui/table-atomic/TableMain.vue';
@@ -66,8 +67,8 @@ const getRowActions = (item: Category) => [
             <!-- Compact Group Selector -->
             <template #top-content>
                 <div class="px-6 py-4 bg-slate-50 border-b border-slate-100">
-                    <div class="max-w-xs space-y-2">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Target Group</label>
+                    <div class="max-w-xs space-y-1">
+                        <BaseLabel value="Target Group" />
                         <div class="relative">
                             <select 
                                 :value="selectedGroupId" 

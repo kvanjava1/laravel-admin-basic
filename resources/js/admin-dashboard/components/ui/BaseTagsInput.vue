@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
+import BaseLabel from './BaseLabel.vue';
 
 /**
  * BaseTagsInput.vue
@@ -10,6 +11,7 @@ const props = defineProps<{
     label: string;
     suggestions?: string[];
     placeholder?: string;
+    error?: string;
 }>();
 
 const emit = defineEmits<{
@@ -98,12 +100,15 @@ const focusInput = () => {
 </script>
 
 <template>
-    <div class="flex flex-col gap-2 relative tags-input-container">
-        <label class="text-sm font-bold text-slate-700 ml-1 uppercase tracking-tight">{{ label }}</label>
+    <div class="flex flex-col gap-1 relative tags-input-container">
+        <BaseLabel :value="label" />
         
         <div 
             @click="focusInput"
-            class="min-h-[52px] w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-2xl flex flex-wrap gap-2 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all cursor-text shadow-sm relative z-20"
+            :class="[
+                error ? 'border-rose-400 bg-rose-50/30 ring-2 ring-rose-50' : 'bg-slate-50 border-slate-200 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary',
+            ]"
+            class="min-h-[52px] w-full px-3 py-2 border rounded-2xl flex flex-wrap gap-2 transition-all cursor-text shadow-sm relative z-20"
         >
             <!-- Tag Chips -->
             <TransitionGroup name="tag-list">
@@ -162,7 +167,13 @@ const focusInput = () => {
             </Transition>
         </div>
         
-        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-1">
+        <div v-if="error" class="flex items-center gap-1 mt-1 ml-1 text-rose-600 animate-in fade-in slide-in-from-top-1">
+            <span class="material-symbols-outlined text-[14px]">error</span>
+            <p class="text-sm font-bold leading-none tracking-tight">
+                {{ error }}
+            </p>
+        </div>
+        <p v-else class="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-1">
             Press <span class="text-slate-600">Enter</span> to add or use <span class="text-slate-600">Arrows</span> to navigate suggestions
         </p>
     </div>

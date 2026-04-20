@@ -5,6 +5,7 @@ import BaseInput from '../ui/BaseInput.vue';
 import BaseSelect from '../ui/BaseSelect.vue';
 import BaseButton from '../ui/BaseButton.vue';
 import { articleService } from '../../services/articleService';
+import { categoryService } from '../../services/categoryService';
 
 interface Props {
     show: boolean;
@@ -23,17 +24,36 @@ const filters = ref({
 });
 
 const statusOptions = ref<any[]>([]);
+const categoryOptions = ref<any[]>([]);
 const isLoading = ref(false);
 
 onMounted(async () => {
+    isLoading.value = true;
     try {
-        const response = await articleService.getStatuses();
+        const [statusResponse, groupsResponse] = await Promise.all([
+            articleService.getStatuses(),
+            categoryService.getGroups()
+        ]);
+        
         statusOptions.value = [
             { label: 'All Status', value: '' },
-            ...response.data.map((s: any) => ({ label: s.label, value: s.name }))
+            ...statusResponse.data.map((s: any) => ({ label: s.label, value: s.name }))
         ];
+
+        const groups = groupsResponse.data || groupsResponse;
+        const articleGroup = groups.find((g: any) => g.slug === 'artikel');
+        if (articleGroup) {
+            const categoriesResponse = await categoryService.getCategories(articleGroup.id);
+            const categories = categoriesResponse.data || categoriesResponse;
+            categoryOptions.value = [
+                { label: 'All Categories', value: '' },
+                ...categories.map((c: any) => ({ label: c.name, value: c.id }))
+            ];
+        }
     } catch (err) {
-        console.error('Failed to load statuses', err);
+        console.error('Failed to load filter options', err);
+    } finally {
+        isLoading.value = false;
     }
 });
 
@@ -65,6 +85,8 @@ const handleReset = () => {
             </div>
 
             <BaseSelect label="Publication Status" v-model="filters.status" :options="statusOptions" />
+            
+            <BaseSelect label="Category" v-model="filters.category" :options="categoryOptions" />
             
             <BaseInput label="Author" icon="person" v-model="filters.author" placeholder="Writer name" />
 

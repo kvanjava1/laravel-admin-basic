@@ -12,12 +12,17 @@ Tabel utama untuk menyimpan konten artikel.
 | `excerpt` | Text | Ringkasan pendek artikel. |
 | `status_id` | ForeignID | Relasi ke `article_statuses`. |
 | `category_id`| ForeignID | Relasi ke `categories` (Scoped to `category_group_id = 1`). |
-| `featured_image`| String | Path ke image utama. |
+| `featured_image_id`| ForeignID | Relasi ke tabel `media`. |
+| `featured_image_title`| String | Judul gambar untuk SEO/Hover. |
+| `featured_image_alt` | String | Alt text untuk Accessibility. |
+| `featured_image_caption`| String | Keterangan gambar di bawah foto. |
+| `seo_focus_keyword` | String | Kata kunci fokus untuk panduan penulisan. |
 | `seo_title` | String | Meta title untuk SEO. |
 | `seo_desc` | String | Meta description untuk SEO. |
-| `created_by` | ForeignID | User yang membuat artikel. |
-| `published_by`| ForeignID | User yang terakhir mempublikasi. |
-| `deleted_by` | ForeignID | User yang melakukan penghapusan. |
+| `seo_social_title`| String | Judul khusus Sosial Media (OG Title). |
+| `seo_social_desc` | String | Deskripsi khusus Sosial Media (OG Desc). |
+| `seo_is_indexable`| Boolean | Toggle Index/No-Index (Default: true). |
+| `author_id` | ForeignID | User yang menulis artikel (Alias dari `created_by`). |
 | `published_at`| DateTime | Waktu tayang artikel. |
 | `created_at` | DateTime | Waktu pembuatan record. |
 | `updated_at` | DateTime | Waktu perubahan terakhir. |

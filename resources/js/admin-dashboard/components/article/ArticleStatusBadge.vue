@@ -16,17 +16,20 @@ const props = defineProps<Props>();
 
 // Helper to determine status color if color_class is missing
 const getStatusClasses = (status: any) => {
-    const name = typeof status === 'string' ? status : status.name;
-    const customColor = typeof status === 'object' ? status.color_class : null;
+    const name = typeof status === 'string' ? status : (status.name || status.label);
+    const statusKey = name?.toLowerCase();
 
-    if (customColor) return customColor;
-
-    switch (name) {
-        case 'Published': return 'text-green-600 bg-green-50';
-        case 'Draft': return 'text-slate-500 bg-slate-100';
-        case 'Scheduled': return 'text-blue-600 bg-blue-50';
-        case 'Archived': return 'text-rose-600 bg-rose-50';
-        default: return 'text-slate-400 bg-slate-50';
+    switch (statusKey) {
+        case 'published':
+            return 'text-emerald-700 bg-emerald-50 border-emerald-100';
+        case 'draft':
+            return 'text-slate-600 bg-slate-100 border-slate-200';
+        case 'scheduled':
+            return 'text-amber-700 bg-amber-50 border-amber-100';
+        case 'archived':
+            return 'text-rose-700 bg-rose-50 border-rose-100';
+        default:
+            return 'text-slate-400 bg-slate-50 border-slate-100';
     }
 };
 

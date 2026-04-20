@@ -12,6 +12,7 @@ import BaseTagsInput from '../../components/ui/BaseTagsInput.vue';
 import BasePageHeader from '../../components/ui/BasePageHeader.vue';
 import BasePageContainer from '../../components/ui/BasePageContainer.vue';
 import MediaImageCropper from '../../components/ui/MediaImageCropper.vue';
+import BaseLabel from '../../components/ui/BaseLabel.vue';
 import { alertService } from '../../utils/sweetalert';
 
 type CropRatio = '16:9' | '4:3';
@@ -279,7 +280,7 @@ onMounted(async () => {
                     <BaseInput label="Image Title" icon="title" v-model="title" placeholder="e.g. Blue Nike Pro Running Shoes" />
 
                     <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-700 ml-1">Alt Text (Accessibility)</label>
+                        <BaseLabel value="Alt Text (Accessibility)" />
                         <textarea
                             v-model="altText"
                             rows="4"
@@ -291,7 +292,7 @@ onMounted(async () => {
                     <BaseInput label="Caption" icon="subtitles" v-model="caption" placeholder="Optional short caption for library display" />
 
                     <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-700 ml-1">Description</label>
+                        <BaseLabel value="Description" />
                         <textarea
                             v-model="description"
                             rows="5"
