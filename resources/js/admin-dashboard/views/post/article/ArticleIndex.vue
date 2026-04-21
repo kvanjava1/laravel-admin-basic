@@ -97,19 +97,27 @@ const handleReset = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <TableRow v-for="(article, index) in articlesList" :key="article.id">
+                        <TableRow v-for="(article, index) in articlesList" :key="article.id" class="group">
                             <TableTd class="text-center font-medium text-sm text-slate-500">
                                 {{ (pagination.currentPage - 1) * pagination.perPage + index + 1 }}
                             </TableTd>
                             <TableTd>
-                                <div class="flex items-center gap-3">
-                                    <div class="flex flex-col">
-                                        <span class="font-bold text-text-primary text-base line-clamp-1">{{
+                                <div class="flex items-center gap-4 group/item cursor-pointer" @click="showArticleDetails(article)">
+                                    <!-- Thumbnail Preview -->
+                                    <div class="h-12 w-12 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 flex-shrink-0 shadow-sm group-hover/item:border-primary/50 transition-colors">
+                                        <img v-if="article.featured_image" :src="article.featured_image.original_url" class="w-full h-full object-cover">
+                                        <div v-else class="w-full h-full flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-slate-300 text-xl">image</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col min-w-0">
+                                        <span class="font-bold text-slate-700 text-[15px] line-clamp-1 group-hover/item:text-primary transition-colors">{{
                                             article.title }}</span>
                                         <span
-                                            class="text-[11px] text-text-secondary/60 uppercase font-black tracking-tighter">By
+                                            class="text-[10px] text-slate-400 uppercase font-black tracking-widest mt-0.5">By
                                             {{
-                                            article.author?.name || 'Unknown' }}</span>
+                                            article.author?.name || 'Administrator' }}</span>
                                     </div>
                                 </div>
                             </TableTd>
