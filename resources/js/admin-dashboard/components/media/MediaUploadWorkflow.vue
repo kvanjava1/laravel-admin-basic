@@ -38,6 +38,7 @@ const {
     openCropper,
     handleCropApply,
     submit,
+    validationErrors,
 } = useMediaForm({ redirect: !props.isModal });
 
 const {
@@ -160,6 +161,7 @@ const handleSuccess = async () => {
                     v-model="categoryId"
                     :options="categoryOptions"
                     :placeholder="isLoadingCategories ? 'Loading...' : 'Select Category'"
+                    :error="validationErrors.category_id?.[0]"
                 />
 
                 <BaseTagsInput
@@ -169,15 +171,29 @@ const handleSuccess = async () => {
                     placeholder="Add tags..."
                 />
 
-                <BaseInput label="Image Title" icon="title" v-model="title" placeholder="e.g. Blue Nike Pro Running Shoes" />
+                <BaseInput 
+                    label="Image Title" 
+                    icon="title" 
+                    v-model="title" 
+                    placeholder="e.g. Blue Nike Pro Running Shoes" 
+                    :error="validationErrors.title?.[0]"
+                />
                 
-                <div class="space-y-2">
-                    <label class="block text-sm font-bold text-slate-700 ml-1">Alt Text (Accessibility)</label>
-                    <textarea v-model="altText" rows="3" placeholder="Describe the image content..."
-                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none text-sm"></textarea>
-                </div>
+                <BaseInput
+                    label="Alt Text (Accessibility)"
+                    type="textarea"
+                    v-model="altText"
+                    placeholder="Describe the image content..."
+                    :error="validationErrors.alt_text?.[0]"
+                />
 
-                <BaseInput label="Caption" icon="subtitles" v-model="caption" placeholder="Optional caption" />
+                <BaseInput 
+                    label="Caption" 
+                    icon="subtitles" 
+                    v-model="caption" 
+                    placeholder="Optional caption" 
+                    :error="validationErrors.caption?.[0]"
+                />
             </div>
 
             <template #footer>

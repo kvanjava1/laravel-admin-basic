@@ -15,6 +15,7 @@ export function useRoleForm() {
     const name = ref('');
     const permissions = ref<string[]>([]);
     const availablePermissions = ref<Record<string, any>>({});
+    const validationErrors = ref<Record<string, string[]>>({});
 
     // UI State
     const isLoading = ref(false);
@@ -47,17 +48,20 @@ export function useRoleForm() {
     };
 
     const validate = () => {
+        validationErrors.value = {};
+        let isValid = true;
+
         if (!name.value) {
-            alertService.errorToast('Validation Error', 'Please provide a Role Name.');
-            return false;
+            validationErrors.value.name = ['The role name field is required.'];
+            isValid = false;
         }
 
         if (permissions.value.length === 0) {
-            alertService.errorToast('Validation Error', 'Please select at least one permission.');
-            return false;
+            validationErrors.value.permissions = ['Please select at least one permission.'];
+            isValid = false;
         }
 
-        return true;
+        return isValid;
     };
 
     const loadRole = async (id: number) => {
@@ -97,12 +101,13 @@ export function useRoleForm() {
 
             router.push({ name: 'roles.index' });
         } catch (err: any) {
+            if (err.response?.status === 422) {
+                validationErrors.value = err.response.data.errors;
+            }
             const response = err.response?.data;
             alertService.errorToast(
                 response?.message || err.message || 'Server Error',
-                response?.errors
-                    ? Object.values(response.errors).flat().map(v => typeof v === 'object' ? JSON.stringify(v) : v).join(' ')
-                    : (response?.message ? '' : 'Something went wrong while saving the role.')
+                err.response?.status === 422 ? 'Please check the form for errors.' : (response?.message ? '' : 'Something went wrong while saving the role.')
             );
         } finally {
             isLoading.value = false;
@@ -114,6 +119,7 @@ export function useRoleForm() {
         name,
         permissions,
         availablePermissions,
+        validationErrors,
         isLoading,
 
         // Actions

@@ -23,47 +23,38 @@ export function useProfileForm() {
 
     // UI State
     const isLoading = ref(false);
+    const validationErrors = ref<Record<string, string[]>>({});
 
     const validate = () => {
-        if (!name.value || !email.value) {
-            alertService.errorToast('Validation Error', 'Please fill in required fields (Name and Email).');
-            return false;
+        validationErrors.value = {};
+        let isValid = true;
+
+        if (!name.value) {
+            validationErrors.value.name = ['The name field is required.'];
+            isValid = false;
         }
 
-        if (!email.value.includes('@')) {
-            alertService.errorToast('Invalid Email', 'Please enter a valid email address.');
-            return false;
+        if (!email.value) {
+            validationErrors.value.email = ['The email field is required.'];
+            isValid = false;
+        } else if (!email.value.includes('@')) {
+            validationErrors.value.email = ['Please enter a valid email address.'];
+            isValid = false;
         }
 
         if (password.value) {
             if (password.value !== password_confirmation.value) {
-                alertService.errorToast('Password Mismatch', 'The password and confirmation do not match.');
-                return false;
+                validationErrors.value.password_confirmation = ['The password confirmation does not match.'];
+                isValid = false;
             }
 
             if (password.value.length < 8) {
-                alertService.errorToast('Weak Password', 'The password must be at least 8 characters long.');
-                return false;
+                validationErrors.value.password = ['The password must be at least 8 characters long.'];
+                isValid = false;
             }
         }
 
-        // Image validation
-        if (avatar.value instanceof File) {
-            const maxSize = 6 * 1024 * 1024; // 6MB
-            const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
-
-            if (avatar.value.size > maxSize) {
-                alertService.errorToast('File Too Large', 'The selected image exceeds the maximum allowed size of 6MB.');
-                return false;
-            }
-
-            if (!allowedTypes.includes(avatar.value.type)) {
-                alertService.errorToast('Invalid File Type', 'Allowed image types are: JPEG, PNG, GIF, and WEBP.');
-                return false;
-            }
-        }
-
-        return true;
+        return isValid;
     };
 
     const loadProfile = async () => {
@@ -93,6 +84,7 @@ export function useProfileForm() {
         if (!validate()) return;
 
         isLoading.value = true;
+        validationErrors.value = {};
 
         try {
             const formData = new FormData();
@@ -124,12 +116,13 @@ export function useProfileForm() {
 
             return response;
         } catch (err: any) {
+            if (err.response?.status === 422) {
+                validationErrors.value = err.response.data.errors;
+            }
             const response = err.response?.data;
             alertService.errorToast(
                 response?.message || err.message || 'Server Error',
-                response?.errors
-                    ? Object.values(response.errors).flat().map(v => typeof v === 'object' ? JSON.stringify(v) : v).join(' ')
-                    : (response?.message ? '' : 'Something went wrong while connecting to the server.')
+                err.response?.status === 422 ? 'Please check the form for errors.' : (response?.message ? '' : 'Something went wrong while connecting to the server.')
             );
             throw err;
         } finally {
@@ -149,6 +142,7 @@ export function useProfileForm() {
         crop_width,
         crop_height,
         isLoading,
+        validationErrors,
 
         // Actions
         submit,

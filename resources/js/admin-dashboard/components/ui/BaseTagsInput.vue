@@ -167,9 +167,9 @@ const focusInput = () => {
             </Transition>
         </div>
         
-        <div v-if="error" class="flex items-center gap-1 mt-1 ml-1 text-rose-600 animate-in fade-in slide-in-from-top-1">
-            <span class="material-symbols-outlined text-[14px]">error</span>
-            <p class="text-sm font-bold leading-none tracking-tight">
+        <div v-if="error" class="flex items-center gap-1.5 mt-2 ml-1 text-rose-600 animate-in fade-in slide-in-from-top-1">
+            <span class="material-symbols-outlined text-[18px] font-black">error</span>
+            <p class="text-sm font-black leading-none">
                 {{ error }}
             </p>
         </div>

@@ -19,6 +19,7 @@ export function useUserStatus(userId: number) {
     const activateReason = ref('');
     const expiredAt = ref('');
     const unbanReason = ref('');
+    const validationErrors = ref<Record<string, string[]>>({});
 
     const fetchHistory = async () => {
         try {
@@ -37,6 +38,7 @@ export function useUserStatus(userId: number) {
     };
 
     const handleBan = async () => {
+        validationErrors.value = {};
         try {
             isSubmitting.value = true;
             await userService.ban(userId, {
@@ -50,9 +52,12 @@ export function useUserStatus(userId: number) {
             expiredAt.value = '';
             await fetchHistory();
         } catch (err: any) {
+            if (err.response?.status === 422) {
+                validationErrors.value = err.response.data.errors;
+            }
             alertService.errorToast(
                 'Ban failed',
-                err.response?.data?.message || 'Check your inputs and try again.'
+                err.response?.status === 422 ? 'Please check your inputs.' : (err.response?.data?.message || 'Check your inputs and try again.')
             );
         } finally {
             isSubmitting.value = false;
@@ -60,6 +65,7 @@ export function useUserStatus(userId: number) {
     };
 
     const handleUnban = async () => {
+        validationErrors.value = {};
         try {
             isSubmitting.value = true;
             await userService.unban(userId, {
@@ -70,9 +76,12 @@ export function useUserStatus(userId: number) {
             unbanReason.value = '';
             await fetchHistory();
         } catch (err: any) {
+            if (err.response?.status === 422) {
+                validationErrors.value = err.response.data.errors;
+            }
             alertService.errorToast(
                 'Restore failed',
-                err.response?.data?.message || 'Check your inputs and try again.'
+                err.response?.status === 422 ? 'Please check your inputs.' : (err.response?.data?.message || 'Check your inputs and try again.')
             );
         } finally {
             isSubmitting.value = false;
@@ -80,6 +89,7 @@ export function useUserStatus(userId: number) {
     };
 
     const handleDeactivate = async () => {
+        validationErrors.value = {};
         try {
             isSubmitting.value = true;
             await userService.deactivate(userId, { reason: deactivateReason.value });
@@ -87,9 +97,12 @@ export function useUserStatus(userId: number) {
             deactivateReason.value = '';
             await fetchHistory();
         } catch (err: any) {
+            if (err.response?.status === 422) {
+                validationErrors.value = err.response.data.errors;
+            }
             alertService.errorToast(
                 'Deactivation failed',
-                err.response?.data?.message || 'An error occurred.'
+                err.response?.status === 422 ? 'Please check your inputs.' : (err.response?.data?.message || 'An error occurred.')
             );
         } finally {
             isSubmitting.value = false;
@@ -97,6 +110,7 @@ export function useUserStatus(userId: number) {
     };
 
     const handleActivate = async () => {
+        validationErrors.value = {};
         try {
             isSubmitting.value = true;
             await userService.activate(userId, { reason: activateReason.value });
@@ -104,9 +118,12 @@ export function useUserStatus(userId: number) {
             activateReason.value = '';
             await fetchHistory();
         } catch (err: any) {
+            if (err.response?.status === 422) {
+                validationErrors.value = err.response.data.errors;
+            }
             alertService.errorToast(
                 'Activation failed',
-                err.response?.data?.message || 'An error occurred.'
+                err.response?.status === 422 ? 'Please check your inputs.' : (err.response?.data?.message || 'An error occurred.')
             );
         } finally {
             isSubmitting.value = false;
@@ -131,6 +148,7 @@ export function useUserStatus(userId: number) {
         activateReason,
         expiredAt,
         unbanReason,
+        validationErrors,
         sortedHistory,
 
         // Actions

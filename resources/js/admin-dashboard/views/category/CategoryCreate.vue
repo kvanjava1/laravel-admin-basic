@@ -15,7 +15,7 @@ const route = useRoute();
 
 const {
     name, slug, selectedGroupId, selectedParentId, isActive,
-    groupOptions, parentOptions, isSubmitting,
+    groupOptions, parentOptions, isSubmitting, validationErrors,
     fetchGroups, fetchCategories, submit, handleCancel
 } = useCategoryForm();
 
@@ -49,31 +49,46 @@ const statusOptions = [
                         label="Target Group" 
                         placeholder="Select Group" 
                         v-model="selectedGroupId"
-                        :options="groupOptions" 
+                        :options="groupOptions"
+                        :error="validationErrors.category_group_id?.[0]"
                     />
                     <BaseSelect 
                         label="Parent Category" 
                         placeholder="None (Root)" 
                         v-model="selectedParentId"
-                        :options="parentOptions" 
+                        :options="parentOptions"
+                        :error="validationErrors.parent_id?.[0]"
                     />
                 </div>
                 <p class="text-xs text-text-secondary mt-4 italic">
                     Select where this category will belong in the hierarchy.
                 </p>
             </BasePanel>
-
+ 
             <!-- 2. Basic Information -->
             <BasePanel title="Basic Information">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-2">
-                    <BaseInput label="Category Name" icon="category" v-model="name" placeholder="e.g. Technology" />
-                    <BaseInput label="URL Slug" icon="link" v-model="slug" placeholder="e.g. technology" />
+                    <BaseInput 
+                        label="Category Name" 
+                        icon="category" 
+                        v-model="name" 
+                        placeholder="e.g. Technology" 
+                        :error="validationErrors.name?.[0]"
+                    />
+                    <BaseInput 
+                        label="URL Slug" 
+                        icon="link" 
+                        v-model="slug" 
+                        placeholder="e.g. technology" 
+                        :error="validationErrors.slug?.[0]"
+                    />
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-2 mt-4">
                     <BaseSelect 
                         label="Status" 
                         v-model="isActive"
-                        :options="statusOptions" 
+                        :options="statusOptions"
+                        :error="validationErrors.is_active?.[0]"
                     />
                 </div>
 

@@ -23,6 +23,7 @@ export function useCategoryForm() {
     const categories = ref<Category[]>([]);
     const isLoading = ref(false);
     const isSubmitting = ref(false);
+    const validationErrors = ref<Record<string, string[]>>({});
 
     // Watchers
     watch(name, (newName) => {
@@ -84,6 +85,8 @@ export function useCategoryForm() {
 
     const submit = async () => {
         isSubmitting.value = true;
+        validationErrors.value = {};
+        
         const payload = {
             category_group_id: selectedGroupId.value,
             parent_id: selectedParentId.value || null,
@@ -105,6 +108,9 @@ export function useCategoryForm() {
                 router.push({ name: 'categories.index' });
             }
         } catch (error: any) {
+            if (error.response?.status === 422) {
+                validationErrors.value = error.response.data.errors;
+            }
             alertService.errorToast(error.response?.data?.message || 'Operation failed');
         } finally {
             isSubmitting.value = false;
@@ -142,7 +148,7 @@ export function useCategoryForm() {
     return {
         // State
         name, slug, selectedGroupId, selectedParentId, isActive,
-        groups, categories, isLoading, isSubmitting,
+        groups, categories, isLoading, isSubmitting, validationErrors,
         groupOptions, parentOptions, categoryId,
 
         // Actions

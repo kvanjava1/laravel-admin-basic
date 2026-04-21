@@ -24,6 +24,7 @@ const {
     activateReason,
     expiredAt,
     unbanReason,
+    validationErrors,
     sortedHistory,
     fetchHistory,
     handleBan,
@@ -94,14 +95,13 @@ onMounted(fetchHistory);
                     <p class="text-sm text-slate-600 italic border-l-4 border-primary/30 pl-4 py-1">
                         Restoring a banned account should be documented with a clear justification.
                     </p>
-                    <div class="space-y-1">
-                        <BaseLabel value="Justification for Restore" />
-                        <textarea 
-                            v-model="unbanReason"
-                            placeholder="Explain why this account is being restored..."
-                            class="w-full min-h-[100px] rounded-xl border-slate-200 focus:border-primary/40 focus:ring-primary/20 text-sm p-3 transition-all"
-                        ></textarea>
-                    </div>
+                    <BaseInput
+                        label="Justification for Restore"
+                        type="textarea"
+                        v-model="unbanReason"
+                        placeholder="Explain why this account is being restored..."
+                        :error="validationErrors.reason?.[0]"
+                    />
                 </div>
                 <template #footer>
                     <div class="flex justify-end p-4 bg-slate-50 rounded-xl">
@@ -119,7 +119,7 @@ onMounted(fetchHistory);
                     <BasePanel title="Deactivate Account" icon="person_off">
                         <div class="space-y-4">
                             <p class="text-sm text-slate-500">Temporarily disable access without a formal ban.</p>
-                            <BaseInput label="Reason for Deactivation" v-model="deactivateReason" placeholder="e.g. User request, maintenance..." />
+                            <BaseInput label="Reason for Deactivation" v-model="deactivateReason" placeholder="e.g. User request, maintenance..." :error="validationErrors.reason?.[0]" />
                         </div>
                         <template #footer>
                             <div class="flex justify-end p-4 bg-slate-50 rounded-xl">
@@ -145,8 +145,8 @@ onMounted(fetchHistory);
                                     <span>Temporary</span>
                                 </button>
                             </div>
-                            <BaseInput v-if="banType === 'temporary'" label="Expires At" type="datetime-local" v-model="expiredAt" size="sm" />
-                            <BaseInput label="Reason" v-model="banReason" placeholder="Violations, TOS..." size="sm" />
+                            <BaseInput v-if="banType === 'temporary'" label="Expires At" type="datetime-local" v-model="expiredAt" size="sm" :error="validationErrors.expired_at?.[0]" />
+                            <BaseInput label="Reason" v-model="banReason" placeholder="Violations, TOS..." size="sm" :error="validationErrors.reason?.[0]" />
                         </div>
                         <template #footer>
                             <div class="flex justify-end p-4 bg-slate-50 rounded-xl">
@@ -166,7 +166,7 @@ onMounted(fetchHistory);
                     <BasePanel title="Activate Account" icon="person_check">
                         <div class="space-y-4">
                             <p class="text-sm text-slate-500">Restore normal access to the system.</p>
-                            <BaseInput label="Reason for Activation" v-model="activateReason" placeholder="e.g. Account verified, issue resolved..." />
+                            <BaseInput label="Reason for Activation" v-model="activateReason" placeholder="e.g. Account verified, issue resolved..." :error="validationErrors.reason?.[0]" />
                         </div>
                         <template #footer>
                             <div class="flex justify-end p-4 bg-slate-50 rounded-xl">
@@ -192,8 +192,8 @@ onMounted(fetchHistory);
                                     <span>Temporary</span>
                                 </button>
                             </div>
-                            <BaseInput v-if="banType === 'temporary'" label="Expires At" type="datetime-local" v-model="expiredAt" size="sm" />
-                            <BaseInput label="Reason" v-model="banReason" placeholder="Violations, TOS..." size="sm" />
+                            <BaseInput v-if="banType === 'temporary'" label="Expires At" type="datetime-local" v-model="expiredAt" size="sm" :error="validationErrors.expired_at?.[0]" />
+                            <BaseInput label="Reason" v-model="banReason" placeholder="Violations, TOS..." size="sm" :error="validationErrors.reason?.[0]" />
                         </div>
                         <template #footer>
                             <div class="flex justify-end p-4 bg-slate-50 rounded-xl">

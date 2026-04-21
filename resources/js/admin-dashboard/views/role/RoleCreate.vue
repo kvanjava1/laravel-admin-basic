@@ -21,6 +21,7 @@ const {
     permissions,
     availablePermissions,
     isLoading,
+    validationErrors,
     submit,
     fetchPermissions,
     togglePermission
@@ -48,7 +49,7 @@ const handleCancel = () => {
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                         <BaseInput label="Role Name" icon="shield" v-model="name" placeholder="e.g. Content Manager"
-                            autofocus />
+                            autofocus :error="validationErrors.name?.[0]" />
 
                         <div
                             class="p-4 bg-slate-50 rounded-xl border border-slate-100 italic text-xs text-slate-500 leading-relaxed h-full flex items-center">
@@ -66,6 +67,11 @@ const handleCancel = () => {
             <!-- Permissions Selection -->
             <BasePanel title="Permissions Management">
                 <div class="space-y-8 py-2">
+                    <div v-if="validationErrors.permissions" class="flex items-center gap-1.5 p-4 bg-rose-50 border border-rose-100 rounded-xl animate-shake mb-6">
+                        <span class="material-symbols-outlined text-rose-600 text-[20px] font-black">error</span>
+                        <p class="text-sm font-black text-rose-600 leading-none">{{ validationErrors.permissions[0] }}</p>
+                    </div>
+
                     <div v-for="(groupPermissions, groupName) in availablePermissions" :key="groupName"
                         class="space-y-4">
                         <div class="flex items-center gap-2 border-b-2 border-slate-200 pb-2">

@@ -23,6 +23,7 @@ export function useMediaForm(options: { redirect?: boolean } = { redirect: true 
     const showCropper = ref(false);
     const activeCropTarget = ref<CropRatio>('16:9');
     const isLoading = ref(false);
+    const validationErrors = ref<Record<string, string[]>>({});
 
     const title = ref('');
     const altText = ref('');
@@ -101,22 +102,30 @@ export function useMediaForm(options: { redirect?: boolean } = { redirect: true 
     };
 
     const validate = () => {
+        validationErrors.value = {};
+        let isValid = true;
+
         if (!imageFile.value) {
             alertService.errorToast('Validation Error', 'Please choose a source image.');
-            return false;
+            isValid = false;
         }
 
-        if (!title.value || !altText.value) {
-            alertService.errorToast('Validation Error', 'Title and alt text are required.');
-            return false;
+        if (!title.value) {
+            validationErrors.value.title = ['The title field is required.'];
+            isValid = false;
+        }
+
+        if (!altText.value) {
+            validationErrors.value.alt_text = ['The alt text field is required.'];
+            isValid = false;
         }
 
         if (!crop169.value || !crop43.value) {
             alertService.errorToast('Validation Error', 'Please complete both crops before saving.');
-            return false;
+            isValid = false;
         }
 
-        return true;
+        return isValid;
     };
 
     const submit = async () => {
@@ -125,6 +134,7 @@ export function useMediaForm(options: { redirect?: boolean } = { redirect: true 
         }
 
         isLoading.value = true;
+        validationErrors.value = {};
 
         try {
             const response = await mediaService.store({
@@ -153,12 +163,13 @@ export function useMediaForm(options: { redirect?: boolean } = { redirect: true 
 
             return response.data || response;
         } catch (err: any) {
+            if (err.response?.status === 422) {
+                validationErrors.value = err.response.data.errors;
+            }
             const response = err.response?.data;
             alertService.errorToast(
                 response?.message || err.message || 'Server Error',
-                response?.errors
-                    ? Object.values(response.errors).flat().join(' ')
-                    : 'Something went wrong while uploading the image.'
+                err.response?.status === 422 ? 'Please check the form for errors.' : 'Something went wrong while uploading the image.'
             );
         } finally {
             isLoading.value = false;
@@ -177,6 +188,7 @@ export function useMediaForm(options: { redirect?: boolean } = { redirect: true 
         completedCropCount,
         nextRequiredCrop,
         isLoading,
+        validationErrors,
         title,
         altText,
         caption,

@@ -175,10 +175,11 @@ watch(() => form.value.title, () => {
                                 type="text"
                                 v-model="form.title"
                                 placeholder="Enter Article Title..."
+                                :class="{ 'animate-shake': validationErrors.title }"
                                 class="w-full text-4xl font-black text-slate-900 placeholder:text-slate-200 border-none focus:ring-0 p-0 bg-transparent"
                             />
-                            <div v-if="validationErrors.title" class="text-rose-500 text-sm font-bold mt-2 animate-pulse flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[14px]">error</span>
+                            <div v-if="validationErrors.title" class="text-rose-600 text-sm font-black mt-2 flex items-center gap-1.5 ml-1 animate-in fade-in slide-in-from-top-1">
+                                <span class="material-symbols-outlined text-[18px]">error</span>
                                 {{ validationErrors.title[0] }}
                             </div>
 
@@ -222,15 +223,13 @@ watch(() => form.value.title, () => {
                     <div class="space-y-6 py-2">
                         <BaseInput label="SEO Title" icon="search" v-model="form.seo_title" placeholder="SEO optimized title..." :error="validationErrors.seo_title?.[0]" />
                         
-                        <div class="space-y-2">
-                            <BaseLabel value="SEO Description" />
-                            <textarea v-model="form.seo_description" rows="3" 
-                                placeholder="Meta description for search engines..."
-                                :class="[
-                                    validationErrors.seo_description ? 'border-rose-400 bg-rose-50/30 ring-2 ring-rose-50' : 'border-slate-200 bg-slate-50 focus:ring-primary/20 focus:border-primary'
-                                ]"
-                                class="w-full px-4 py-3 border rounded-2xl text-slate-700 focus:outline-none focus:ring-2 transition-all resize-none text-base"></textarea>
-                        </div>
+                        <BaseInput
+                            label="SEO Description"
+                            type="textarea"
+                            v-model="form.seo_description"
+                            placeholder="Meta description for search engines..."
+                            :error="validationErrors.seo_description?.[0]"
+                        />
 
                         <div class="space-y-6">
                             <BaseInput 

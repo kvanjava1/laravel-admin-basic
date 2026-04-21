@@ -33,7 +33,8 @@ const {
     crop_height,
     isLoading,
     submit,
-    loadUser
+    loadUser,
+    validationErrors
 } = useUserForm();
 
 // Cropper State (UI Specific)
@@ -104,9 +105,9 @@ const handleCancel = () => {
             <!-- 2. Account Details -->
             <BasePanel title="Basic Information">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-2">
-                    <BaseInput label="Full Name" icon="person" v-model="name" placeholder="e.g. John Doe" />
+                    <BaseInput label="Full Name" icon="person" v-model="name" placeholder="e.g. John Doe" :error="validationErrors.name?.[0]" />
                     <BaseInput label="Email Address" icon="mail" type="email" v-model="email"
-                        placeholder="john@example.com" />
+                        placeholder="john@example.com" :error="validationErrors.email?.[0]" />
                 </div>
             </BasePanel>
 
@@ -114,9 +115,9 @@ const handleCancel = () => {
             <BasePanel title="Security Settings">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-2">
                     <BaseInput label="New Password (Optional)" icon="lock" type="password" v-model="password"
-                        placeholder="••••••••" />
+                        placeholder="••••••••" :error="validationErrors.password?.[0]" />
                     <BaseInput label="Confirm New Password" icon="lock_reset" type="password"
-                        v-model="password_confirmation" placeholder="••••••••" />
+                        v-model="password_confirmation" placeholder="••••••••" :error="validationErrors.password_confirmation?.[0]" />
                 </div>
                 <p class="text-xs text-text-secondary mt-2 italic px-1">
                     Leave blank if you don't wish to change the password.
@@ -127,7 +128,7 @@ const handleCancel = () => {
             <BasePanel title="System Access">
                 <div class="grid grid-cols-1 gap-6 py-2">
                     <BaseSelect label="Assigned Role" placeholder="Select Role" v-model="selectedRole"
-                        :options="availableRoles" />
+                        :options="availableRoles" :error="validationErrors.role?.[0]" />
                 </div>
 
                 <template #footer>

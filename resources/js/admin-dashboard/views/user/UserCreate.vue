@@ -32,6 +32,7 @@ const {
     crop_width,
     crop_height,
     isLoading,
+    validationErrors,
     submit
 } = useUserForm();
 
@@ -99,18 +100,18 @@ const handleCancel = () => {
             <!-- 2. Basic Information -->
             <BasePanel title="Basic Information">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-2">
-                    <BaseInput label="Full Name" icon="person" v-model="name" placeholder="e.g. John Doe" />
+                    <BaseInput label="Full Name" icon="person" v-model="name" placeholder="e.g. John Doe" :error="validationErrors.name?.[0]" />
                     <BaseInput label="Email Address" icon="mail" type="email" v-model="email"
-                        placeholder="john@example.com" />
+                        placeholder="john@example.com" :error="validationErrors.email?.[0]" />
                 </div>
             </BasePanel>
 
             <!-- 3. Security Settings -->
             <BasePanel title="Security Settings">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-2">
-                    <BaseInput label="Password" icon="lock" type="password" v-model="password" placeholder="••••••••" />
+                    <BaseInput label="Password" icon="lock" type="password" v-model="password" placeholder="••••••••" :error="validationErrors.password?.[0]" />
                     <BaseInput label="Confirm Password" icon="lock_reset" type="password"
-                        v-model="password_confirmation" placeholder="••••••••" />
+                        v-model="password_confirmation" placeholder="••••••••" :error="validationErrors.password_confirmation?.[0]" />
                 </div>
             </BasePanel>
 
@@ -118,7 +119,7 @@ const handleCancel = () => {
             <BasePanel title="Account Permissions">
                 <div class="grid grid-cols-1 gap-6 py-2">
                     <BaseSelect label="Assigned Role" placeholder="Select Role" v-model="selectedRole"
-                        :options="availableRoles" />
+                        :options="availableRoles" :error="validationErrors.role?.[0]" />
                 </div>
 
                 <template #footer>

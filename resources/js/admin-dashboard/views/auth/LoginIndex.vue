@@ -12,8 +12,10 @@ const router = useRouter();
 const { isLoading, error } = useApi();
 const email = ref('');
 const password = ref('');
+const validationErrors = ref<Record<string, string[]>>({});
 
 const handleLogin = async () => {
+    validationErrors.value = {};
     try {
         await authService.login({
             email: email.value,
@@ -21,9 +23,12 @@ const handleLogin = async () => {
         });
         router.push({ name: 'dashboard' });
     } catch (err: any) {
+        if (err.response?.status === 422) {
+            validationErrors.value = err.response.data.errors;
+        }
         alertService.errorToast(
             'Login failed',
-            err.response?.data?.message || 'Please check your credentials.'
+            err.response?.status === 422 ? 'Please check your credentials.' : (err.response?.data?.message || 'Something went wrong.')
         );
         console.error('Login failed', err);
     }
@@ -44,11 +49,11 @@ const handleLogin = async () => {
             <BasePanel title="Sign In">
                 <form @submit.prevent="handleLogin" class="space-y-6 py-2">
                     <BaseInput label="Email Address" icon="mail" type="email" v-model="email"
-                        placeholder="admin@example.com" required />
+                        placeholder="admin@example.com" :error="validationErrors.email?.[0]" />
 
                     <div class="space-y-1">
                         <BaseInput label="Password" icon="lock" type="password" v-model="password"
-                            placeholder="••••••••" required />
+                            placeholder="••••••••" :error="validationErrors.password?.[0]" />
                         <div class="flex justify-end">
                             <a href="#" class="text-xs font-bold text-primary hover:underline">Forgot password?</a>
                         </div>
