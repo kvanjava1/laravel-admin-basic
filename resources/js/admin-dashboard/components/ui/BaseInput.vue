@@ -8,6 +8,7 @@ defineProps<{
     placeholder?: string;
     icon?: string;
     error?: string;
+    disabled?: boolean;
     readonly?: boolean;
     required?: boolean;
     hint?: string;
