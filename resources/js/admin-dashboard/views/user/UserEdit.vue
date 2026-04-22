@@ -105,9 +105,9 @@ const handleCancel = () => {
             <!-- 2. Account Details -->
             <BasePanel title="Basic Information">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-2">
-                    <BaseInput label="Full Name" icon="person" v-model="name" placeholder="e.g. John Doe" :error="validationErrors.name?.[0]" />
+                    <BaseInput label="Full Name" icon="person" v-model="name" placeholder="e.g. John Doe" :error="validationErrors.name?.[0]" required />
                     <BaseInput label="Email Address" icon="mail" type="email" v-model="email"
-                        placeholder="john@example.com" :error="validationErrors.email?.[0]" />
+                        placeholder="john@example.com" :error="validationErrors.email?.[0]" required />
                 </div>
             </BasePanel>
 
@@ -128,7 +128,7 @@ const handleCancel = () => {
             <BasePanel title="System Access">
                 <div class="grid grid-cols-1 gap-6 py-2">
                     <BaseSelect label="Assigned Role" placeholder="Select Role" v-model="selectedRole"
-                        :options="availableRoles" :error="validationErrors.role?.[0]" />
+                        :options="availableRoles" :error="validationErrors.role?.[0]" required />
                 </div>
 
                 <template #footer>

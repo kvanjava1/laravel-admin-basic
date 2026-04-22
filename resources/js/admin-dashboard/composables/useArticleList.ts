@@ -114,7 +114,6 @@ export function useArticleList() {
     const getRowActions = (article: any) => [
         { label: 'View Detail', icon: 'visibility', handler: () => showArticleDetails(article) },
         { label: 'Edit Content', icon: 'edit', handler: () => router.push({ name: 'articles.edit', params: { id: article.id } }) },
-        { label: 'Manage SEO', icon: 'search', divider: true, handler: () => router.push({ name: 'articles.edit', params: { id: article.id }, query: { tab: 'seo' } }) },
         { label: 'Delete Article', icon: 'delete', colorClass: 'text-rose-600', handler: () => handleDeleteArticle(article) },
     ];
 

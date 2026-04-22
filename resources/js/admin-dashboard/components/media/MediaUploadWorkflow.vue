@@ -142,7 +142,7 @@ const handleSuccess = async () => {
                 </div>
 
                 <div @click="openCropper('4:3')" 
-                    class="aspect-[4/3] max-w-sm mx-auto rounded-2xl border-2 overflow-hidden cursor-pointer transition-all flex items-center justify-center bg-slate-50 group shadow-sm hover:shadow-md"
+                    class="aspect-[4/3] rounded-2xl border-2 overflow-hidden cursor-pointer transition-all flex items-center justify-center bg-slate-50 group shadow-sm hover:shadow-md"
                     :class="preview43 ? 'border-slate-200 hover:border-primary' : 'border-primary border-dashed bg-primary/5'">
                     <img v-if="preview43" :src="preview43" class="w-full h-full object-cover">
                     <div v-else class="text-center">

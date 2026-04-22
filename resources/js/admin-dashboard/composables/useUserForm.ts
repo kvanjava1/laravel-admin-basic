@@ -75,6 +75,11 @@ export function useUserForm() {
             }
         }
 
+        if (!selectedRole.value) {
+            validationErrors.value.role = ['The role field is required.'];
+            isValid = false;
+        }
+
         return isValid;
     };
 

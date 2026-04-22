@@ -10,6 +10,7 @@ defineProps<{
     error?: string;
     disabled?: boolean;
     readonly?: boolean;
+    required?: boolean;
 }>();
 
 defineEmits<{
@@ -19,7 +20,7 @@ defineEmits<{
 
 <template>
     <div class="flex flex-col gap-1.5 w-full">
-        <BaseLabel v-if="label" :value="label" :class="{ 'text-rose-500': error }" />
+        <BaseLabel v-if="label" :value="label" :required="required" :class="{ 'text-rose-500': error }" />
         
         <div class="relative group">
             <!-- Icon -->

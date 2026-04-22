@@ -68,7 +68,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <BaseModal :show="show" @close="emit('close')" title="Media Library" size="5xl">
+    <BaseModal :show="show" @close="emit('close')" title="Media Library">
         <div class="flex flex-col h-[700px]">
             <!-- Tabs -->
             <div class="flex border-b border-slate-200 px-6">

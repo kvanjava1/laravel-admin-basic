@@ -77,7 +77,7 @@ const handleReset = () => {
 </script>
 
 <template>
-    <BaseModal :show="show" title="Advanced Search: Articles" icon="manage_search" @close="emit('close')" max-width="2xl">
+    <BaseModal :show="show" title="Advanced Search: Articles" icon="manage_search" @close="emit('close')">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-1">
             <div class="md:col-span-2">
                 <BaseInput label="Search Keyword" icon="search" v-model="filters.search"

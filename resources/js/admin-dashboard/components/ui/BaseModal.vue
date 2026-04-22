@@ -10,7 +10,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  size: 'lg'
+  size: '4xl'
 });
 const emit = defineEmits(['close']);
 

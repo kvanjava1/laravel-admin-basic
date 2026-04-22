@@ -12,6 +12,7 @@ defineProps<{
     placeholder?: string;
     error?: string;
     disabled?: boolean;
+    required?: boolean;
 }>();
 
 defineEmits<{
@@ -21,7 +22,7 @@ defineEmits<{
 
 <template>
     <div class="flex flex-col gap-1.5 w-full">
-        <BaseLabel :value="label" :class="{ 'text-rose-500': error }" />
+        <BaseLabel :value="label" :required="required" :class="{ 'text-rose-500': error }" />
         
         <div class="relative group">
             <select
