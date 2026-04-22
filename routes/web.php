@@ -6,5 +6,5 @@ use Inertia\Inertia;
 
 // Admin Dashboard Routes
 Route::get('/admin/{any?}', function () {
-    return view('app');
+    return view('admin');
 })->where('any', '.*');

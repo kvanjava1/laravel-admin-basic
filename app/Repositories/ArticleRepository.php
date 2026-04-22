@@ -10,7 +10,7 @@ class ArticleRepository
     public function paginate(array $filters = [], int $perPage = 10): LengthAwarePaginator
     {
         return Article::query()
-            ->with(['author', 'category', 'featuredImage'])
+            ->with(['author', 'category', 'featuredImage', 'tags'])
             ->when(isset($filters['search']), function ($query) use ($filters) {
                 $query->where('title', 'like', '%' . $filters['search'] . '%');
             })
