@@ -24,7 +24,7 @@ import TableTd from '../../../components/ui/table-atomic/TableTd.vue';
 const {
     articlesList, isLoading, showAdvancedFilter, showDetailsModal, selectedArticle,
     filterValues, pagination, isSearching, headerActions,
-    fetchArticles, clearFilters,
+    fetchArticles, clearFilters, showArticleDetails,
     getRowActions, handlePageChange
 } = useArticleList();
 
