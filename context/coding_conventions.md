@@ -1,251 +1,210 @@
 # Coding Conventions
 
-This file collects the useful parts of the older project rules and rewrites them in a safer form.
-
-Important:
-
-- these are conventions and patterns, not guaranteed truths in every file
-- the current codebase mostly follows them, but there are exceptions
-- when code and convention differ, follow the actual code and nearby module patterns
+Patterns and rules derived from existing code. When convention and code disagree, follow the actual code in the target module.
 
 ## Backend Conventions
 
-### Preferred Layering
+### Layering Rules
 
-The intended backend flow is:
+| Layer | Does | Does Not |
+|-------|------|----------|
+| Controller | Accept input, delegate, return JSON | Hold business logic, query DB directly |
+| FormRequest | Validate input, some authorization | Orchestrate business operations |
+| Service | Business rules, state transitions, cross-model work | Format HTTP responses |
+| Repository | Reusable queries, filtering, pagination, CRUD | Hold business rules |
+| Model | Relationships, persistence, attribute accessors | Hold service-level logic |
 
-`Route -> FormRequest -> Controller -> Service -> Repository -> Model/DB`
+**Reality check**: Some controllers still do simple model reads directly. Some services still query Eloquent for simple lookups. Follow the pattern in the specific module you're modifying.
 
-In practice:
+### Controller Conventions
 
-- controllers usually orchestrate requests and responses
-- services usually hold business logic
-- repositories usually hold reusable query logic
-- models define relationships and persistence
+- Constructor injection for primary service dependency
+- `ApiResponse` trait for standardized JSON responses
+- Route model binding where convenient (`User $user`, `Media $media`, `Article $article`)
+- Docblocks on public methods
+- Return types: `JsonResponse` or inferred
 
-This convention is visible across users, roles, and categories, even though some modules do not follow it perfectly.
+```php
+class ExampleController extends Controller
+{
+    use ApiResponse;
 
-### Controllers
+    public function __construct(
+        protected ExampleService $exampleService
+    ) {}
 
-Preferred controller responsibilities:
+    public function index(Request $request)
+    {
+        $data = $this->exampleService->list($request->only([...]));
+        return $this->successResponse($data, 'Retrieved successfully');
+    }
+}
+```
 
-- accept HTTP request input
-- use `FormRequest` validation where available
-- delegate business operations to services
-- return JSON responses
+### Service Conventions
 
-Observed local conventions:
+- Constructor injection for repository and other service dependencies
+- Numbered inline comments for multi-step flows (`// 1. Validate`, `// 2. Process`)
+- Throw `ApiException` for business-rule violations
+- Use `DB::transaction()` when multiple writes are involved
+- Shared image upload logic via `HandlesImageUploads` trait
 
-- constructor injection for primary services
-- `ApiResponse` trait for standardized success/error JSON
-- route model binding where convenient
-- docblocks on public methods
+### Repository Conventions
 
-Reality check:
+- Methods: `paginate()`, `create()`, `update()`, `delete()`, `findById()` / `find()`
+- Filter-based pagination with `when()` chains
+- Eager loading declared close to the query
+- No business logic
 
-- some controllers still perform direct model reads or inline validation for simple cases
-- do not assume every controller is perfectly thin
+### Model Conventions
 
-### Services
+- Explicit `$fillable` arrays (no `$guarded`)
+- `$hidden` for sensitive fields (`password`, `remember_token`)
+- `casts()` method or `$casts` property for booleans and datetimes
+- Explicit relationship methods with docblocks
+- `SoftDeletes` on major entities: `User`, `Role`, `Category`, `CategoryGroup`, `Media`, `Article`
+- `$appends` for computed URL attributes (Media model)
 
-Preferred service responsibilities:
+### Form Request Conventions
 
-- business rules
-- cross-model orchestration
-- protection checks
-- state transitions
-- coordination with repositories and traits
+- Grouped under `app/Http/Requests/AdminDashboard/{Module}/`
+- Separate `StoreRequest` and `UpdateRequest` when rules differ
+- Shared `CategoryRequest` when create/update rules are identical
+- Use `$request->validated()` payload when passing to services
+- Authorization checks in `authorize()` method for protected operations
 
-Observed local conventions:
+### Error Handling Pattern
 
-- constructor injection for repository/service dependencies
-- numbered inline comments for complex multi-step flows
-- `ApiException` for business-rule failures
-- shared upload logic moved into `HandlesImageUploads`
+```
+Service throws ApiException(message, statusCode)
+  → ApiExceptionHandler catches in bootstrap/app.php
+    → Returns { success: false, message, errors }
+```
 
-Reality check:
+- `ApiException` — custom exception with configurable HTTP status (default 400)
+- `ApiExceptionHandler` — registered globally, only processes `/api/*` requests
+- Normalized handling for: `ValidationException` (422), `AuthenticationException` (401), `AuthorizationException` (403), `ModelNotFoundException` (404)
+- Debug mode includes stack trace in `errors` field
 
-- some services still query Eloquent models directly for simple lookups and counts
-- this project uses repositories heavily, but not as an absolute rule
+### Routing Conventions
 
-### Repositories
+- Route names use resource-style naming: `users.index`, `roles.update`, `categories.groups`
+- Authenticated API routes grouped under `auth:sanctum` middleware
+- SPA catch-all in `routes/web.php`: `/admin/{any?}`
+- Custom endpoints break out of resource pattern when needed (e.g., `users/{user}/ban`)
 
-Preferred repository responsibilities:
+### Naming Conventions (Backend)
 
-- reusable queries
-- filtering
-- pagination
-- eager loading
-- basic CRUD wrappers
-
-Observed local conventions:
-
-- `create`, `update`, `delete`
-- paginated list methods with structured filters
-- relationship eager loading declared close to the query
-
-Reality check:
-
-- repositories are important in this project, but not the only place where Eloquent appears
-
-### Models
-
-Observed model patterns:
-
-- explicit `$fillable`
-- hidden password fields where needed
-- `casts()` or `$casts` for booleans and datetimes
-- explicit relationship methods
-- soft deletes on major entities such as `User`, `Role`, `Category`, `CategoryGroup`
-
-Useful conventions:
-
-- prefer descriptive relationship docblocks
-- keep model methods focused on persistence and relationships
-
-### Request Validation
-
-Observed request conventions:
-
-- request classes are grouped under `app/Http/Requests/AdminDashboard`
-- create and update requests are split when rules differ
-- request authorization is used in some modules, especially protected user/role updates
-
-Useful guidance:
-
-- prefer `validated()` payloads entering services
-- keep business-rule validation in services, not only request rules
-
-### Error Handling
-
-Observed project pattern:
-
-- API controllers generally rely on `ApiResponse`
-- business-rule failures use `ApiException`
-- `/api/*` exceptions are normalized through `ApiExceptionHandler`
-
-Useful guidance:
-
-- prefer throwing domain-specific failures upward instead of formatting ad hoc controller errors
-
-### Routing
-
-Observed backend route conventions:
-
-- route names use resource-style names such as `users.index`, `roles.update`, `categories.groups`
-- authenticated API routes are grouped under `auth:sanctum`
-- SPA catch-all is handled in `routes/web.php` under `/admin/{any?}`
+| Item | Convention | Example |
+|------|-----------|---------|
+| Controller | PascalCase, suffixed | `UserManagementController` |
+| Service | PascalCase, suffixed | `ArticleService` |
+| Repository | PascalCase, suffixed | `MediaRepository` |
+| FormRequest | PascalCase, action prefix | `StoreUserRequest`, `UpdateRequest` |
+| Model | PascalCase, singular | `Article`, `BanHistory` |
+| Migration | snake_case, timestamped | `2026_04_19_140351_create_articles_table` |
+| Config file | snake_case | `protection.php`, `media.php` |
+| Route name | dot-separated resource | `users.ban-history` |
 
 ## Frontend Conventions
 
-### Preferred Layering
+### Component Conventions
 
-The intended frontend flow is:
+- `<script setup lang="ts">` on all components
+- Page-level components in `views/{module}/`
+- Reusable atomic UI in `components/ui/Base*.vue`
+- Domain-specific in `components/{module}/`
+- Heavy reuse of Base* components — prefer extending them over creating one-off elements
 
-`View -> Composable -> Service -> useApi -> Backend API`
+### Composable Conventions
 
-This is the dominant pattern in the codebase, especially for categories, users, profile, and parts of roles.
+- Filename starts with `use` (e.g., `useArticleForm.ts`)
+- Exported as named functions
+- Manage `ref`, `computed`, `watch` for page/module state
+- Use `alertService` (from `utils/sweetalert.ts`) for user feedback
+- Expose only the state and methods the view needs
 
-Reality check:
+### Service Conventions
 
-- some views still contain substantial page logic directly
-- media pages now follow the real `service + composable` flow, but they remain one of the denser frontend modules because crop/edit/detail interactions are stateful
+- Exported as object literals (e.g., `export const articleService = { ... }`)
+- Use `useApi()` for all HTTP calls
+- Use Ziggy `route()` for URL generation
+- Types and interfaces co-located in the same file (not in `types/`)
+- Keep HTTP details in services, workflow logic in composables
 
-### Views
+### Styling Conventions
 
-Observed view conventions:
+- **Tailwind CSS** is the primary styling system
+- **Google Material Symbols Outlined** is the icon system
+- **Inter** font family (configured in `tailwind.config.js`)
+- Custom theme colors defined in `tailwind.config.js`:
 
-- Vue 3 with `<script setup lang="ts">`
-- page-level components live in `views/`
-- routes grouped by module folders such as `user`, `role`, `category`, `profile`
-- heavy reuse of `Base*` UI components
+| Token | Value | Usage |
+|-------|-------|-------|
+| `primary` | `#526D82` | Primary actions, buttons |
+| `background-light` | `#DDE6ED` | Page background |
+| `sidebar-bg` | `#27374D` | Sidebar |
+| `surface-card` | `#ffffff` | Card backgrounds |
+| `text-primary` | `#27374D` | Primary text |
+| `text-secondary` | `#526D82` | Secondary text |
 
-Useful guidance:
+### Rounded Container Standard
 
-- keep views focused on page composition and user interactions
-- move reusable stateful logic into composables when it becomes non-trivial
+| Element | Border Radius | Usage |
+|---------|--------------|-------|
+| `rounded-3xl` | Large | Primary parent containers: Modals, Panels, Main Cards |
+| `rounded-2xl` | Medium | Interactive elements: Inputs, Buttons, Selects, Inner Cards |
+| `rounded-xl` | Small | Compact buttons (sm size), badges |
 
-### Composables
+### SEO Hint Pattern
 
-Observed composable conventions:
+Critical SEO fields include a `hint` prop with actionable guidance:
 
-- filenames start with `use`
-- exported as named functions
-- manage `ref`, `computed`, `watch`, and page/module state
-- commonly handle user feedback with `alertService`
+```vue
+<BaseInput
+  label="SEO Title"
+  :hint="'Recommended: 50-60 characters. Include your primary keyword.'"
+/>
+```
 
-Useful guidance:
+Hint styling: `text-[11px] italic text-slate-400`
 
-- expose only the state and methods the view needs
-- prefer module-specific composables when a page has meaningful state transitions
+### SweetAlert Conventions
 
-### Services
+Use `alertService` from `utils/sweetalert.ts` for all user feedback:
 
-Observed frontend service conventions:
+```typescript
+import { alertService } from '../utils/sweetalert';
 
-- exported as object literals such as `userService`, `roleService`
-- use `useApi()` for requests
-- often define related TypeScript interfaces in the same file
+// Success notification
+alertService.successToast('Item created successfully');
 
-Useful guidance:
+// Error notification
+alertService.errorToast('Failed to save', error.message);
 
-- keep HTTP details in services
-- keep composables focused on state and workflow, not URL construction
+// Confirmation dialog
+const result = await alertService.confirm({
+    title: 'Delete Item?',
+    text: 'This action cannot be undone.',
+    danger: true
+});
+if (result.isConfirmed) { ... }
+```
 
-### Components
+### Naming Conventions (Frontend)
 
-Observed component grouping:
+| Item | Convention | Example |
+|------|-----------|---------|
+| View file | PascalCase | `ArticleCreate.vue` |
+| Component file | PascalCase, Base* for atomic | `BaseInput.vue`, `ArticleStatusBadge.vue` |
+| Composable file | camelCase, use* prefix | `useArticleForm.ts` |
+| Service file | camelCase, *Service suffix | `articleService.ts` |
+| Route name | dot-separated resource | `articles.index`, `users.edit` |
 
-- `components/layout`
-- `components/ui`
-- domain components like `components/user` and `components/role`
+## Practical Rules For Changes
 
-Useful guidance:
-
-- use `Base*` atomic UI components where possible
-- use domain components for module-specific badges, filters, and modals
-- for media specifically, category/tag option loading is shared through a dedicated composable instead of being hardcoded per page
-
-### Routing
-
-Observed frontend route conventions:
-
-- lazy-loaded route components
-- route names use resource-style naming
-- route meta distinguishes authenticated vs guest pages
-- `AdminLayout` wraps most admin pages under `/admin`
-
-### Styling
-
-Observed styling conventions:
-
-- Tailwind CSS is primary
-- Material Symbols Outlined is the icon system
-- custom theme colors are defined in `tailwind.config.js`
-- SweetAlert styling is centralized in `utils/sweetalert.ts`
-
-Useful guidance:
-
-- prefer existing utility classes and shared components over one-off styling
-- preserve the current visual language unless deliberately redesigning a feature
-
-## Practical Rule For Future Changes
-
-When changing this project:
-
-1. follow actual patterns already used in the target module
-2. use the conventions in this file to stay consistent
-3. if the convention and code disagree, keep behavior compatible with existing code
-
-## Media-Specific Reality Notes
-
-- media now has real create, index, detail, update, and delete flows
-- list and detail use intentionally different API contracts:
-  - list is lightweight and returns only what the index needs
-  - detail returns richer metadata, variants, and tags
-- media delete currently means:
-  - soft delete the record
-  - set `file_cleanup_marked_at`
-  - keep files on disk for later manual cleanup
-- tags use a dedicated `tags` table plus `media_tag` pivot, not a JSON column on `media`
-- media tests avoid global database refresh and instead clean up the specific records they create
+1. **Follow the target module's patterns** — if the module uses `ApiResponse`, your changes should too.
+2. **Check for existing utilities** before creating new ones — `alertService`, `useApi`, `HandlesImageUploads` already exist.
+3. **Do not mix response formats** — use `ApiResponse` trait unless you are in a module that already uses raw `response()->json()`.
+4. **New modules should follow the dominant pattern**: Controller (thin) → Service (business logic) → Repository (queries).
+5. **Preserve all existing comments and docblocks** unless they are directly contradicted by your changes.

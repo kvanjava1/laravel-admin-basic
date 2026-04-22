@@ -1,24 +1,23 @@
 # Project Context
 
-This folder is a compact AI-facing context bundle for the `laravel-admin-basic` project.
+AI-facing context bundle for `laravel-admin-basic`. Every file here is derived from source code, not aspirational documentation.
 
-Start here:
+## How To Use This Context
 
-- `project_summary.md`
-  What this project actually is, based on source code.
-- `architecture_and_domain.md`
-  Main modules, entities, workflows, and important boundaries.
-- `runtime_and_docker.md`
-  How this project is run in development, including the Docker-based workflow.
-- `coding_conventions.md`
-  Practical coding conventions and architectural patterns that are useful when modifying this codebase.
+Read in order when onboarding. When modifying code, read only the relevant files.
 
-Important notes:
+| File | Purpose |
+|------|---------|
+| `project_overview.md` | Identity, technology stack, what this project is and is not |
+| `architecture.md` | Layered architecture, directory map, data flow, config strategy |
+| `domain_and_entities.md` | Business entities, relationships, workflows, and rules |
+| `api_reference.md` | Every API endpoint with route names, methods, controllers, and auth |
+| `frontend_reference.md` | Vue SPA structure, components, composables, services, routing |
+| `coding_conventions.md` | Code patterns, naming, styling, and rules for modifying the codebase |
+| `infrastructure.md` | Docker runtime, build commands, testing, operations |
 
-- Root `README.md` is still the default Laravel README and does not describe this application.
-- Dashboard content is still largely placeholder/frontend-presentational.
-- Media management is now backend-backed and should no longer be treated as a mock-only area.
-- This folder intentionally separates:
-  - current system facts, derived from code
-  - implementation conventions and coding patterns, derived from how the project is structured
-- If code and convention ever conflict, treat the codebase as the source of truth.
+## Ground Rules
+
+- **Code is truth.** If context and code disagree, trust the code.
+- **Convention is guidance.** Conventions describe dominant patterns, not universal guarantees.
+- **Verify before editing.** Always read the actual file you plan to modify before making changes.
