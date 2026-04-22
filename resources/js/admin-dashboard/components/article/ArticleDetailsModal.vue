@@ -68,7 +68,7 @@ const handleEdit = () => {
             </div>
 
             <!-- 2. Article Content Card (Premium Style) -->
-            <section class="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+            <section class="rounded-3xl border border-slate-200 bg-white overflow-hidden shadow-sm">
                 <div class="p-8 space-y-10">
                     <!-- Header & Metadata -->
                     <div class="space-y-6">
@@ -126,7 +126,7 @@ const handleEdit = () => {
 
                 <!-- 4. Combined SEO & Metrics Card -->
                 <div>
-                    <section class="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+                    <section class="rounded-3xl border border-slate-200 bg-white overflow-hidden shadow-sm">
                         <!-- Google Preview Section -->
                         <div class="p-6 space-y-6">
                             <div>

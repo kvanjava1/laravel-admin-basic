@@ -27,13 +27,12 @@ const {
     handlePageChange
 } = useMediaList();
 const showDetailsModal = ref(false);
-const selectedMedia = ref<MediaDetail | null>(null);
-const isLoadingDetails = ref(false);
+const selectedMedia = ref<any | null>(null);
 
 const formatDate = (value: string) => value.slice(0, 10);
 
 const getRowActions = (item: any) => [
-    { label: 'Detail Media', icon: 'info', handler: () => openDetails(item.id) },
+    { label: 'Detail Media', icon: 'info', handler: () => openDetails(item) },
     { label: 'Edit Media', icon: 'edit', handler: () => router.push({ name: 'media.edit', params: { id: item.id } }) },
     { label: 'Delete Media', icon: 'delete', colorClass: 'text-rose-600', handler: () => handleDelete(item) },
 ];
@@ -67,24 +66,9 @@ const headerActions = [
     },
 ];
 
-const openDetails = async (id: number) => {
+const openDetails = (item: any) => {
+    selectedMedia.value = item;
     showDetailsModal.value = true;
-    isLoadingDetails.value = true;
-
-    try {
-        const response = await mediaService.show(id);
-        if (response.success) {
-            selectedMedia.value = response.data;
-        }
-    } catch (error: any) {
-        showDetailsModal.value = false;
-        alertService.errorToast(
-            error.response?.data?.message || 'Load Error',
-            'Could not load media detail.'
-        );
-    } finally {
-        isLoadingDetails.value = false;
-    }
 };
 
 const closeDetails = () => {
@@ -169,7 +153,7 @@ const handleDelete = async (item: any) => {
                         v-for="item in mediaItems"
                         :key="item.id"
                         class="cursor-pointer overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-colors hover:border-primary/35 hover:shadow-md"
-                        @click="openDetails(item.id)"
+                        @click="openDetails(item)"
                     >
                         <div class="relative aspect-[16/10] overflow-hidden bg-slate-100">
                             <img
@@ -257,7 +241,6 @@ const handleDelete = async (item: any) => {
         <MediaDetailsModal
             :show="showDetailsModal"
             :media="selectedMedia"
-            :is-loading="isLoadingDetails"
             @close="closeDetails"
         />
     </BasePageContainer>

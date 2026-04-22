@@ -8,9 +8,9 @@ defineProps<{
     placeholder?: string;
     icon?: string;
     error?: string;
-    disabled?: boolean;
     readonly?: boolean;
     required?: boolean;
+    hint?: string;
 }>();
 
 defineEmits<{
@@ -65,7 +65,7 @@ defineEmits<{
                         : 'border-slate-200 bg-slate-50 focus:border-primary focus:ring-primary/10 hover:border-slate-300',
                     disabled ? 'opacity-60 cursor-not-allowed bg-slate-100' : ''
                 ]" 
-                class="w-full border rounded-xl py-3 pr-10 text-sm font-medium text-slate-700 focus:outline-none focus:ring-4 transition-all duration-300 placeholder:text-slate-400"
+                class="w-full border rounded-2xl py-3 pr-10 text-sm font-medium text-slate-700 focus:outline-none focus:ring-4 transition-all duration-300 placeholder:text-slate-400"
                 @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
             >
 
@@ -91,6 +91,13 @@ defineEmits<{
                 </p>
             </div>
         </Transition>
+
+        <!-- Hint Message -->
+        <div v-if="hint && !error" class="mt-1.5 ml-1">
+            <p class="text-[11px] italic text-slate-400 leading-tight">
+                {{ hint }}
+            </p>
+        </div>
     </div>
 </template>
 

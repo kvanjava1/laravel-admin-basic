@@ -184,10 +184,15 @@ watch(() => form.value.title, () => {
                             </div>
 
                             <!-- Permalink inline -->
-                            <div class="flex items-center gap-2 mt-4 text-[11px] font-bold text-slate-400 bg-slate-50 w-fit px-3 py-1.5 rounded-full border border-slate-100">
-                                <span class="material-symbols-outlined text-sm">link</span>
-                                <span>URL:</span>
-                                <span class="text-primary truncate">{{ form.slug || 'your-article-slug' }}</span>
+                            <div class="flex items-center justify-between mt-4">
+                                <div class="flex items-center gap-2 text-[11px] font-bold text-slate-400 bg-slate-50 w-fit px-3 py-1.5 rounded-full border border-slate-100">
+                                    <span class="material-symbols-outlined text-sm">link</span>
+                                    <span>URL:</span>
+                                    <span class="text-primary truncate">{{ form.slug || 'your-article-slug' }}</span>
+                                </div>
+                                <p class="text-[11px] italic text-slate-400">
+                                    Tip: Keep titles between 50-60 characters for best Google results.
+                                </p>
                             </div>
                         </div>
 
@@ -200,6 +205,7 @@ watch(() => form.value.title, () => {
                                 placeholder="Write a catchy lead or summary here..."
                                 minimal
                                 :error="validationErrors.excerpt?.[0]"
+                                hint="Tip: Write a compelling summary that hooks the reader and includes your main keyword."
                             />
                         </div>
 
@@ -213,6 +219,7 @@ watch(() => form.value.title, () => {
                                 placeholder="Start writing your amazing article here..."
                                 @open-media-library="handleOpenMediaLibrary"
                                 :error="validationErrors.content?.[0]"
+                                hint="Tip: Use H2 and H3 tags for hierarchy. Focus on value for readers (E-E-A-T)."
                             />
                         </div>
                     </div>
@@ -221,14 +228,22 @@ watch(() => form.value.title, () => {
                 <!-- SEO Information (Below Content) -->
                 <BasePanel title="Search Engine Optimization" icon="public" no-overflow>
                     <div class="space-y-6 py-2">
-                        <BaseInput label="SEO Title" icon="search" v-model="form.seo_title" placeholder="SEO optimized title..." :error="validationErrors.seo_title?.[0]" />
+                        <BaseInput 
+                            label="SEO Title" 
+                            icon="search" 
+                            v-model="form.seo_title" 
+                            placeholder="SEO optimized title..." 
+                            :error="validationErrors.seo_title?.[0]" 
+                            hint="Tip: This title appears in search results. Ideal: 50-60 characters."
+                        />
                         
                         <BaseInput
-                            label="SEO Description"
+                            label="Meta Description (SEO)"
                             type="textarea"
                             v-model="form.seo_description"
                             placeholder="Meta description for search engines..."
                             :error="validationErrors.seo_description?.[0]"
+                            hint="Tip: Summarize for search engines. Must be under 160 characters."
                         />
 
                         <div class="space-y-6">
@@ -238,6 +253,7 @@ watch(() => form.value.title, () => {
                                 placeholder="e.g. Electric Car 2026" 
                                 icon="key"
                                 :error="validationErrors.seo_focus_keyword?.[0]"
+                                hint="Tip: Primary keyword used to analyze your content's SEO performance."
                             />
                             
                             <div v-if="seoAnalysis" class="flex flex-col gap-4 pt-6 border-t border-slate-200/50 mt-4">
@@ -331,7 +347,13 @@ watch(() => form.value.title, () => {
 
                         <div v-if="form.featured_image_url" class="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
                             <BaseInput label="Image Title" v-model="form.featured_image_title" placeholder="SEO Title..." icon="title" />
-                            <BaseInput label="Alt Text" v-model="form.featured_image_alt" placeholder="Describe for SEO..." icon="accessibility_new" />
+                            <BaseInput 
+                                label="Alt Text" 
+                                v-model="form.featured_image_alt" 
+                                placeholder="Describe for SEO..." 
+                                icon="accessibility_new"
+                                hint="Tip: Describe the image to help Google Image Search indexing."
+                            />
                             <BaseInput label="Image Caption" v-model="form.featured_image_caption" placeholder="Visible caption..." icon="notes" />
                         </div>
                     </div>

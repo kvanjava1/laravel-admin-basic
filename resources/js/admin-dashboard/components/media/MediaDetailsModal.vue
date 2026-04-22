@@ -92,7 +92,7 @@ const getVariantFormat = (_key: string, media?: MediaDetail | null) => {
                 </div>
             </div>
 
-            <section class="rounded-2xl border border-slate-200 bg-white p-5">
+            <section class="rounded-3xl border border-slate-200 bg-white p-5">
                 <h4 class="text-sm font-black uppercase tracking-[0.18em] text-slate-400">Image Inputs</h4>
                 <div class="mt-4 space-y-4">
                     <div>
@@ -138,7 +138,7 @@ const getVariantFormat = (_key: string, media?: MediaDetail | null) => {
                 </div>
             </section>
 
-            <section class="rounded-2xl border border-slate-200 bg-white p-5">
+            <section class="rounded-3xl border border-slate-200 bg-white p-5">
                 <h4 class="text-sm font-black uppercase tracking-[0.18em] text-slate-400">Crop Coordinates</h4>
                 <div class="mt-4 space-y-4">
                     <div class="rounded-2xl bg-slate-50 p-4">
@@ -154,7 +154,7 @@ const getVariantFormat = (_key: string, media?: MediaDetail | null) => {
                 </div>
             </section>
 
-            <section class="rounded-2xl border border-slate-200 bg-white p-5">
+            <section class="rounded-3xl border border-slate-200 bg-white p-5">
                 <div class="space-y-3">
                     <div>
                         <h4 class="text-sm font-black uppercase tracking-[0.18em] text-slate-400">Variants</h4>

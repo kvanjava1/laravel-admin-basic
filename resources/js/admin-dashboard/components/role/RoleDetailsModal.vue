@@ -34,7 +34,7 @@ const formatDate = (dateString?: string) => {
     <BaseModal :show="show" :title="role ? `Role Detail: ${role.name}` : 'Role Details'" @close="emit('close')">
         <div v-if="role" class="space-y-8">
             <!-- Role Header -->
-            <div class="flex items-center gap-6 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+            <div class="flex items-center gap-6 p-4 rounded-3xl bg-slate-50 border border-slate-100">
                 <div
                     class="h-20 w-20 rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-3xl font-bold shadow-inner border border-slate-200">
                     <span class="material-symbols-outlined text-4xl">shield_person</span>

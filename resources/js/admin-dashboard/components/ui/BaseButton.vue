@@ -41,12 +41,12 @@ const variantClasses = computed(() => {
 const sizeClasses = computed(() => {
   switch (props.size) {
     case 'sm':
-      return 'px-3 py-1.5 text-xs rounded-lg';
+      return 'px-3 py-1.5 text-xs rounded-xl';
     case 'lg':
-      return 'px-8 py-3 text-base rounded-xl';
+      return 'px-8 py-3 text-base rounded-2xl';
     case 'md':
     default:
-      return 'px-4 py-2 text-sm rounded-xl';
+      return 'px-4 py-2 text-sm rounded-2xl';
   }
 });
 

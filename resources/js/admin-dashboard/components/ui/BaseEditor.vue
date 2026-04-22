@@ -17,6 +17,7 @@ const props = defineProps<{
     hideImage?: boolean;
     minimal?: boolean;
     error?: string;
+    hint?: string;
 }>();
 
 const emit = defineEmits<{
@@ -148,7 +149,7 @@ const handleImageClick = () => {
             :class="[
                 error ? 'border-rose-400 ring-2 ring-rose-50' : 'border-slate-200 focus-within:ring-4 focus-within:ring-primary/5 focus-within:border-primary',
             ]"
-            class="border rounded-2xl bg-white overflow-hidden transition-all flex flex-col"
+            class="border rounded-3xl bg-white overflow-hidden transition-all flex flex-col"
         >
             <!-- Toolbar -->
             <div class="flex flex-wrap items-center gap-1 p-2 border-b border-slate-100 bg-slate-50/50" :class="{ 'bg-rose-50/30 border-rose-100': error }">
@@ -243,6 +244,13 @@ const handleImageClick = () => {
         <span class="material-symbols-outlined text-[18px] font-black text-rose-600">error</span>
         <p class="text-sm font-black text-rose-600 leading-none">
             {{ error }}
+        </p>
+    </div>
+
+    <!-- Hint Message -->
+    <div v-if="hint && !error" class="mt-1.5 ml-1">
+        <p class="text-[11px] italic text-slate-400 leading-tight">
+            {{ hint }}
         </p>
     </div>
 </div>

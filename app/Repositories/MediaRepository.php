@@ -33,17 +33,7 @@ class MediaRepository
             ->with([
                 'category:id,name,slug',
                 'tags:id,name,slug',
-            ])
-            ->select([
-                'id',
-                'category_id',
-                'title',
-                'caption',
-                'alt_text',
-                'output_mime_type',
-                'created_at',
-                'original_path',
-                'ratio_4_3_medium_path',
+                'creator:id,name,email',
             ])
             ->latest();
 

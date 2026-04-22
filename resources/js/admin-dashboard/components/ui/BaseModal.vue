@@ -6,6 +6,7 @@
 interface Props {
   show: boolean;
   title?: string;
+  icon?: string;
   size?: 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
 }
 
@@ -54,12 +55,17 @@ const sizeClasses = {
         >
           <div 
             v-if="show"
-            class="relative w-full bg-white rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+            class="relative w-full bg-white rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
             :class="sizeClasses[props.size]"
           >
             <!-- Header -->
             <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-              <h3 class="text-xl font-bold text-text-primary">{{ title }}</h3>
+              <div class="flex items-center gap-3">
+                <span v-if="icon" class="material-symbols-outlined text-slate-400 text-[24px]">
+                  {{ icon }}
+                </span>
+                <h3 class="text-xl font-bold text-text-primary">{{ title }}</h3>
+              </div>
               <button 
                 @click="emit('close')"
                 class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-400 hover:text-slate-600 transition-all"

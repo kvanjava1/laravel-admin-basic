@@ -112,18 +112,18 @@ const handleReset = () => {
                                     </div>
 
                                     <div class="flex flex-col min-w-0">
-                                        <span class="font-bold text-slate-700 text-[15px] line-clamp-1 group-hover/item:text-primary transition-colors">{{
-                                            article.title }}</span>
-                                        <span
-                                            class="text-[10px] text-slate-400 uppercase font-black tracking-widest mt-0.5">By
-                                            {{
-                                            article.author?.name || 'Administrator' }}</span>
+                                        <span class="font-bold text-slate-700 text-base line-clamp-1 group-hover/item:text-primary transition-colors">
+                                            {{ article.title }}
+                                        </span>
+                                        <span class="text-sm text-text-secondary/60">
+                                            By {{ article.author?.name || 'Administrator' }}
+                                        </span>
                                     </div>
                                 </div>
                             </TableTd>
                             <TableTd>
                                 <div
-                                    class="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wide shadow-sm border border-black/5">
+                                    class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[11px] font-bold uppercase tracking-wide shadow-sm border border-black/5">
                                     <span class="h-1.5 w-1.5 rounded-full mr-2 bg-slate-400"></span>
                                     {{ article.category?.name || 'Uncategorized' }}
                                 </div>

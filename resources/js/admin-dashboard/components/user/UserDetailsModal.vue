@@ -43,7 +43,7 @@ const handleEdit = () => {
             <!-- Premium Profile Header -->
             <div class="relative mb-20">
                 <!-- Cover/Banner Gradient -->
-                <div class="h-32 w-full bg-gradient-to-r from-primary/80 to-primary rounded-xl opacity-90"></div>
+                <div class="h-32 w-full bg-gradient-to-r from-primary/80 to-primary rounded-2xl opacity-90"></div>
                 
                 <!-- Avatar Positioning (Overlapping) -->
                 <div class="absolute -bottom-16 left-1/2 -translate-x-1/2">
@@ -78,7 +78,7 @@ const handleEdit = () => {
                         <span class="w-1.5 h-1.5 rounded-full bg-primary/40"></span>
                         Account Identity
                     </h5>
-                    <div class="bg-slate-50 border border-slate-100 rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="bg-slate-50 border border-slate-100 rounded-3xl p-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div class="flex items-start gap-3">
                             <div class="p-2 bg-white rounded-lg shadow-sm border border-slate-100">
                                 <span class="material-symbols-outlined text-slate-400 text-[20px]">fingerprint</span>
@@ -107,7 +107,7 @@ const handleEdit = () => {
                         <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
                         System Timestamps
                     </h5>
-                    <div class="bg-white border border-slate-100 rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="bg-white border border-slate-100 rounded-3xl p-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-emerald-500/60 text-[20px] mt-1">calendar_add_on</span>
                             <div>

@@ -17,7 +17,7 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-    <div class="light-panel rounded-xl p-6 border border-slate-200 shadow-sm flex flex-col">
+    <div class="light-panel rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col">
         <!-- Header with Title and Slots for Buttons -->
         <div 
             class="flex flex-wrap items-start gap-4 mb-4"

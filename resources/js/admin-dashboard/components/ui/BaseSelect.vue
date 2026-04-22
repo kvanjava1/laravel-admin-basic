@@ -13,6 +13,7 @@ defineProps<{
     error?: string;
     disabled?: boolean;
     required?: boolean;
+    hint?: string;
 }>();
 
 defineEmits<{
@@ -35,7 +36,7 @@ defineEmits<{
                         : 'border-slate-200 bg-slate-50 focus:border-primary focus:ring-primary/10 hover:border-slate-300',
                     disabled ? 'opacity-60 cursor-not-allowed bg-slate-100' : ''
                 ]"
-                class="w-full border rounded-xl py-3 px-4 pr-10 text-sm font-medium appearance-none bg-none focus:outline-none focus:ring-4 transition-all duration-300"
+                class="w-full border rounded-2xl py-3 px-4 pr-10 text-sm font-medium appearance-none bg-none focus:outline-none focus:ring-4 transition-all duration-300"
                 @change="$emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
             >
                 <option value="" disabled hidden>{{ placeholder || `Select ${label}` }}</option>
@@ -75,6 +76,13 @@ defineEmits<{
                 </p>
             </div>
         </Transition>
+
+        <!-- Hint Message -->
+        <div v-if="hint && !error" class="mt-1.5 ml-1">
+            <p class="text-[11px] italic text-slate-400 leading-tight">
+                {{ hint }}
+            </p>
+        </div>
     </div>
 </template>
 

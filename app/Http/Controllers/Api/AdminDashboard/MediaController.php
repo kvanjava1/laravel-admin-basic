@@ -30,7 +30,7 @@ class MediaController extends Controller
         $media = $this->mediaService->getPaginatedMedia((int) $request->input('per_page', 12), $filters);
 
         return $this->successResponse([
-            'data' => MediaListResource::collection($media->getCollection()),
+            'data' => MediaDetailResource::collection($media->getCollection()),
             'current_page' => $media->currentPage(),
             'last_page' => $media->lastPage(),
             'per_page' => $media->perPage(),
