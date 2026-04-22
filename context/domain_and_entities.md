@@ -207,7 +207,8 @@ Ban types:
 
 Protection rules (enforced by `RoleAndAccountProtectionService`):
 - Protected accounts (config: `admin@admin.com`) can only be edited by themselves
-- Protected roles (config: `Super Administrator`) cannot be banned, deleted, or their role changed
+- Protected role holders (config: `Super Administrator`) cannot be banned, deleted, or edited by others (only by themselves when logged in)
+- Protected roles cannot be assigned through the dashboard (existing assignments are maintained)
 - Users cannot be created with `Banned` status
 - `status_id` is stripped from basic user updates — status changes go through governance endpoints
 

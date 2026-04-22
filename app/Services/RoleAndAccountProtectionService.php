@@ -90,6 +90,10 @@ class RoleAndAccountProtectionService
         if ($this->isProtectedAccount($targetUser) && $targetUser->id !== $authUser->id) {
             throw new ApiException("This system-protected account can only be edited by the owner.", 403);
         }
+
+        if ($this->getProtectedRole($targetUser) && $targetUser->id !== $authUser->id) {
+            throw new ApiException("Users with a system-protected role can only be edited by themselves.", 403);
+        }
     }
 
     /**
