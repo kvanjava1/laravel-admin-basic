@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Home - High Impact Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .shadow-strong {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+        }
+    </style>
+</head>
+
+<body class="bg-[#f1f5f9] text-[#0f172a] antialiased">
+
+    <!-- Header (Same as Detail) -->
+    <header class="bg-black text-white sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="text-2xl font-black tracking-tighter">BLOG.</div>
+            <nav class="hidden md:flex space-x-10 text-[14px] font-bold uppercase tracking-widest">
+                <a href="#" class="hover:text-blue-500 transition-colors">Articles</a>
+                <a href="#" class="hover:text-blue-500 transition-colors">Categories</a>
+                <a href="#" class="hover:text-blue-500 transition-colors">About</a>
+                <a href="#" class="hover:text-blue-500 transition-colors">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-12">
+        
+        <!-- Section: Hero Featured -->
+        <section class="relative h-[600px] rounded-[2rem] overflow-hidden shadow-strong group cursor-pointer mb-20 border border-white">
+            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1600&auto=format&fit=crop" 
+                 alt="Featured" 
+                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+            <div class="absolute inset-0 hero-gradient flex flex-col justify-end p-8 md:p-16">
+                <div class="max-w-3xl">
+                    <span class="inline-block bg-blue-600 text-white text-[11px] uppercase tracking-[0.2em] font-black px-4 py-2 rounded-lg mb-6">Featured Article</span>
+                    <h1 class="text-4xl md:text-6xl font-[900] text-white leading-[0.95] tracking-[-0.05em] mb-6">
+                        Discovering the Hidden Gems of Urban Architecture
+                    </h1>
+                    <p class="text-slate-300 text-lg font-medium line-clamp-2 mb-8 max-w-2xl">
+                        A deep dive into the structural marvels of the 21st century and how they redefine our living spaces.
+                    </p>
+                    <div class="flex items-center space-x-4">
+                        <img src="https://i.pravatar.cc/150?u=sarah" alt="Author" class="w-12 h-12 rounded-full border-2 border-white/20">
+                        <div class="text-sm">
+                            <p class="font-black text-white">Sarah Chen</p>
+                            <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">October 26, 2023</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Latest Articles (Vertical List) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+            
+            <!-- Main List (Left) -->
+            <div class="lg:col-span-8 space-y-12">
+                <div class="flex items-center space-x-6 mb-10">
+                    <h2 class="text-3xl font-[900] text-black tracking-tighter uppercase italic">Latest Feed</h2>
+                    <div class="h-[2px] flex-grow bg-black"></div>
+                </div>
+
+                <!-- Article Card 1 -->
+                <article class="group flex flex-col md:flex-row gap-8 items-center">
+                    <div class="w-full md:w-[320px] shrink-0 aspect-[4/3] rounded-3xl overflow-hidden shadow-strong border border-white">
+                        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="flex-grow">
+                        <span class="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] mb-3 block">Engineering</span>
+                        <h3 class="text-3xl font-black text-black leading-tight tracking-tight mb-4 group-hover:text-blue-600 transition-colors">
+                            Mastering React Hooks for High-Velocity Teams
+                        </h3>
+                        <p class="text-slate-500 text-base font-medium line-clamp-2 mb-6">
+                            How we scaled our frontend architecture to support millions of concurrent users using advanced hook patterns.
+                        </p>
+                        <div class="flex items-center text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                            <span>Author Namma</span>
+                            <span class="mx-3 text-slate-200">/</span>
+                            <span>Jan 22, 2026</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Article Card 2 -->
+                <article class="group flex flex-col md:flex-row gap-8 items-center">
+                    <div class="w-full md:w-[320px] shrink-0 aspect-[4/3] rounded-3xl overflow-hidden shadow-strong border border-white">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="flex-grow">
+                        <span class="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] mb-3 block">Business</span>
+                        <h3 class="text-3xl font-black text-black leading-tight tracking-tight mb-4 group-hover:text-blue-600 transition-colors">
+                            The Economics of Cloud Native Infrastructure
+                        </h3>
+                        <p class="text-slate-500 text-base font-medium line-clamp-2 mb-6">
+                            Optimizing your cloud spend while maintaining maximum reliability and performance across multiple regions.
+                        </p>
+                        <div class="flex items-center text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                            <span>Author Smith</span>
+                            <span class="mx-3 text-slate-200">/</span>
+                            <span>Jun 15, 2024</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Article Card 3 -->
+                <article class="group flex flex-col md:flex-row gap-8 items-center">
+                    <div class="w-full md:w-[320px] shrink-0 aspect-[4/3] rounded-3xl overflow-hidden shadow-strong border border-white">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="flex-grow">
+                        <span class="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] mb-3 block">Security</span>
+                        <h3 class="text-3xl font-black text-black leading-tight tracking-tight mb-4 group-hover:text-blue-600 transition-colors">
+                            Implementing Zero Trust at Scale
+                        </h3>
+                        <p class="text-slate-500 text-base font-medium line-clamp-2 mb-6">
+                            Beyond the hype: practical steps to secure your distributed systems without sacrificing developer velocity.
+                        </p>
+                        <div class="flex items-center text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                            <span>Author Chen</span>
+                            <span class="mx-3 text-slate-200">/</span>
+                            <span>Dec 02, 2024</span>
+                        </div>
+                    </div>
+                </article>
+
+                <div class="pt-10">
+                    <button class="w-full py-6 bg-white border-2 border-black text-black font-black uppercase tracking-[0.3em] rounded-2xl hover:bg-black hover:text-white transition-all shadow-strong">
+                        Load More Articles
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar (Right) -->
+            <aside class="lg:col-span-4 space-y-16">
+                
+                <!-- Category Widget -->
+                <div>
+                    <h4 class="text-xl font-black uppercase tracking-tighter mb-8 italic">Trending Categories</h4>
+                    <div class="flex flex-col gap-3">
+                        <a href="#" class="group flex items-center justify-between p-5 bg-white rounded-2xl border border-slate-200 hover:border-black transition-all">
+                            <span class="font-bold">Engineering</span>
+                            <span class="bg-slate-100 group-hover:bg-black group-hover:text-white px-3 py-1 rounded-lg text-[10px] font-black">24</span>
+                        </a>
+                        <a href="#" class="group flex items-center justify-between p-5 bg-white rounded-2xl border border-slate-200 hover:border-black transition-all">
+                            <span class="font-bold">Dev Operations</span>
+                            <span class="bg-slate-100 group-hover:bg-black group-hover:text-white px-3 py-1 rounded-lg text-[10px] font-black">12</span>
+                        </a>
+                        <a href="#" class="group flex items-center justify-between p-5 bg-white rounded-2xl border border-slate-200 hover:border-black transition-all">
+                            <span class="font-bold">Cloud Computing</span>
+                            <span class="bg-slate-100 group-hover:bg-black group-hover:text-white px-3 py-1 rounded-lg text-[10px] font-black">08</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Newsletter Widget -->
+                <div class="bg-black text-white p-10 rounded-[2rem] shadow-strong">
+                    <h4 class="text-2xl font-black leading-tight mb-4">Get the weekly digest.</h4>
+                    <p class="text-slate-400 text-sm font-medium mb-8">No spam. Just high-impact articles delivered to your inbox.</p>
+                    <input type="email" placeholder="email@address.com" class="w-full bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-white placeholder:text-slate-600 mb-4 outline-none focus:border-blue-500 transition-colors">
+                    <button class="w-full py-4 bg-blue-600 text-white font-black uppercase tracking-widest text-[11px] rounded-xl hover:bg-blue-700 transition-colors">Subscribe Now</button>
+                </div>
+
+            </aside>
+        </div>
+    </main>
+
+    <footer class="bg-black text-white mt-32 py-20 border-t border-white/10">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+            <div class="text-3xl font-black tracking-tighter mb-8 md:mb-0">BLOG.</div>
+            <p class="text-slate-500 text-sm font-bold uppercase tracking-widest">© 2026 All Rights Reserved</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
