@@ -52,8 +52,12 @@ class AuthService
 
         $token = $user->createToken('admin-dashboard')->plainTextToken;
 
+        $user->load(['status', 'roles']);
+        $userData = $user->toArray();
+        $userData['permissions'] = $user->getAllPermissions()->toArray();
+
         return [
-            'user' => $user->load('status'),
+            'user' => $userData,
             'token' => $token,
         ];
     }

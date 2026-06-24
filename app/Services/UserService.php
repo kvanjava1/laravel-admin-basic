@@ -4,16 +4,12 @@ namespace App\Services;
 
 use App\Models\UserStatus;
 use App\Repositories\UserRepository;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use App\Exceptions\ApiException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\ImageManager;
-use Exception;
 use App\Models\User;
 use App\Traits\HandlesImageUploads;
 use App\Services\RoleAndAccountProtectionService;
@@ -136,28 +132,6 @@ class UserService
         $user->syncRoles($data['role']);
 
         return $user->load('roles');
-    }
-
-    /**
-     * Toggle a user's banned status.
-     */
-    public function toggleBan(User $user)
-    {
-        // 0. Protect Primary Admin and System Role accounts
-        $authUser = Auth::user();
-        if ($authUser) {
-            $this->protectionService->validateUserModification($user, $authUser);
-        }
-
-        // 1. Specifically validate if the user can be banned
-        $this->protectionService->validateUserBan($user);
-
-        $bannedStatus = UserStatus::where('name', 'Banned')->firstOrFail();
-        $activeStatus = UserStatus::where('name', 'Active')->firstOrFail();
-
-        $newStatusId = ($user->status_id === $bannedStatus->id) ? $activeStatus->id : $bannedStatus->id;
-
-        return $this->userRepository->update($user, ['status_id' => $newStatusId]);
     }
 
     /**

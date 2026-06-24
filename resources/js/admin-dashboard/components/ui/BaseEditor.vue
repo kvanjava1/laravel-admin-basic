@@ -235,8 +235,8 @@ const handleImageClick = () => {
                 <span class="h-1.5 w-1.5 rounded-full" :class="isSourceMode ? 'bg-amber-500' : 'bg-emerald-500'"></span>
                 {{ isSourceMode ? 'Direct HTML Editing' : 'Ready to Publish' }}
             </div>
-            <div v-if="editor.value">
-                {{ editor.value.storage.characterCount?.words?.() || 0 }} words
+            <div v-if="editor">
+                {{ editor.storage.characterCount?.words?.() || 0 }} words
             </div>
         </div>
     </div>

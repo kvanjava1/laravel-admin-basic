@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminDashboard\User\StoreUserRequest;
 use App\Http\Requests\AdminDashboard\User\UpdateUserRequest;
 use App\Services\UserService;
+use App\Services\RoleAndAccountProtectionService;
 use App\Models\UserStatus;
 use App\Models\User;
 use App\Traits\ApiResponse;
@@ -15,11 +16,10 @@ class UserManagementController extends Controller
 {
     use ApiResponse;
 
-    protected $userService;
-
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
+    public function __construct(
+        protected UserService $userService,
+        protected RoleAndAccountProtectionService $protectionService
+    ) {
     }
 
     /**
@@ -71,13 +71,12 @@ class UserManagementController extends Controller
     /**
      * Display the specified user.
      */
-    public function show(User $user, \App\Services\RoleAndAccountProtectionService $protectionService)
+    public function show(User $user)
     {
         $user->load(['status', 'roles']);
         
-        // Append protection status for frontend logic
-        $user->is_protected = $protectionService->isProtectedAccount($user) || 
-                             $user->getRoleNames()->contains(fn($role) => $protectionService->isProtectedRole($role));
+        $user->is_protected = $this->protectionService->isProtectedAccount($user) || 
+                              $user->getRoleNames()->contains(fn($role) => $this->protectionService->isProtectedRole($role));
 
         return $this->successResponse($user, 'User retrieved successfully');
     }
@@ -107,16 +106,5 @@ class UserManagementController extends Controller
         $this->userService->delete($user);
 
         return $this->successResponse(null, 'User deleted successfully');
-    }
-
-    /**
-     * Toggle ban status for the specified user.
-     */
-    public function toggleBan(User $user)
-    {
-        $updatedUser = $this->userService->toggleBan($user);
-        $message = $updatedUser->status->name === 'Banned' ? 'User banned successfully' : 'User unbanned successfully';
-
-        return $this->successResponse($updatedUser->load(['status', 'roles']), $message);
     }
 }

@@ -240,7 +240,6 @@ const loadImage = () => {
     }
 
     imageLoaded.value = false;
-    imageElement.crossOrigin = 'anonymous';
     imageElement.onload = async () => {
         imageLoaded.value = true;
         zoom.value = 1;

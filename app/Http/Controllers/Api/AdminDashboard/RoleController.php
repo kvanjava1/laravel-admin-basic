@@ -9,17 +9,14 @@ use App\Traits\ApiResponse;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\AdminDashboard\Role\StoreRoleRequest;
 use App\Http\Requests\AdminDashboard\Role\UpdateRoleRequest;
-use App\Services\RoleAndAccountProtectionService;
 
 class RoleController extends Controller
 {
     use ApiResponse;
 
-    protected $roleService;
-
-    public function __construct(RoleService $roleService)
-    {
-        $this->roleService = $roleService;
+    public function __construct(
+        protected RoleService $roleService
+    ) {
     }
 
     /**
@@ -74,11 +71,9 @@ class RoleController extends Controller
     /**
      * Remove the specified role.
      */
-    public function destroy(Role $role, RoleAndAccountProtectionService $protectionService)
+    public function destroy(Role $role)
     {
-        $protectionService->validateRoleModification($role);
-
-        $role->delete();
+        $this->roleService->delete($role);
         return $this->successResponse(null, 'Role deleted successfully');
     }
 }

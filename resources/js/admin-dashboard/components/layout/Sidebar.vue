@@ -1,19 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuth } from '../../composables/useAuth';
+import { usePermission } from '../../composables/usePermission';
 import { authService } from '../../services/authService';
 
 const router = useRouter();
 const { user } = useAuth();
+const { can } = usePermission();
 
 const menuItems = [
     { name: 'Dashboard', icon: 'dashboard', to: { name: 'dashboard' } },
-    { name: 'User Management', icon: 'group', to: { name: 'users.index' } },
-    { name: 'Role Management', icon: 'shield_person', to: { name: 'roles.index' } },
-    { name: 'Category Management', icon: 'category', to: { name: 'categories.index' } },
-    { name: 'Media Management', icon: 'image', to: { name: 'media.index' } },
+    { name: 'User Management', icon: 'group', to: { name: 'users.index' }, permission: 'view-users' },
+    { name: 'Role Management', icon: 'shield_person', to: { name: 'roles.index' }, permission: 'view-roles' },
+    { name: 'Category Management', icon: 'category', to: { name: 'categories.index' }, permission: 'view-categories' },
+    { name: 'Media Management', icon: 'image', to: { name: 'media.index' }, permission: 'view-media' },
 ];
+
+const filteredMenuItems = computed(() => menuItems.filter(item => !item.permission || can(item.permission)));
 
 const dropdowns = ref({
     catalog: false,
@@ -63,7 +67,7 @@ const handleLogout = async () => {
 
         <div class="flex-1 overflow-y-auto py-6 px-3 flex flex-col gap-1">
             <p class="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">General</p>
-            <router-link v-for="item in menuItems" :key="item.name"
+            <router-link v-for="item in filteredMenuItems" :key="item.name"
                 :to="item.to"
                 custom
                 v-slot="{ navigate, href, isActive, isExactActive }">
@@ -79,8 +83,8 @@ const handleLogout = async () => {
                 </a>
             </router-link>
 
-            <!-- Post Management (New) -->
-            <div class="mt-4">
+            <!-- Post Management -->
+            <div v-if="can('view-articles')" class="mt-4">
                 <p class="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Content</p>
                 <div class="flex flex-col gap-1">
                     <button @click="toggleDropdown('posts')"

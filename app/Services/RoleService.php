@@ -65,6 +65,16 @@ class RoleService
     }
 
     /**
+     * Delete an existing role with protection check.
+     */
+    public function delete(Role $role)
+    {
+        $this->protectionService->validateRoleModification($role);
+
+        return $this->roleRepository->delete($role);
+    }
+
+    /**
      * Get all available permissions.
      */
     public function getAllPermissions()

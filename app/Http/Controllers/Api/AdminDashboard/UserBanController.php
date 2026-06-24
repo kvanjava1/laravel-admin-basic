@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Api\AdminDashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminDashboard\User\BanUserRequest;
 use App\Models\User;
-use App\Models\BanHistory;
-use App\Models\UserStatus;
+use App\Services\UserBanService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,15 +14,17 @@ class UserBanController extends Controller
 {
     use ApiResponse;
 
+    public function __construct(
+        protected UserBanService $userBanService
+    ) {
+    }
+
     /**
      * Display the ban history for a specific user.
      */
     public function index(User $user)
     {
-        $history = $user->banHistories()
-            ->with('admin')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $history = $this->userBanService->getBanHistory($user);
 
         return $this->successResponse([
             'user' => $user->load('status'),
@@ -34,117 +35,52 @@ class UserBanController extends Controller
     /**
      * Ban a user (permanent or temporary).
      */
-    public function ban(BanUserRequest $request, User $user, \App\Services\RoleAndAccountProtectionService $protectionService)
+    public function ban(BanUserRequest $request, User $user)
     {
-        $protectionService->validateUserBan($user);
-        
-        $bannedStatus = UserStatus::where('name', 'Banned')->firstOrFail();
+        $updatedUser = $this->userBanService->ban($user, $request->validated(), Auth::user());
 
-        // 1. Log the history
-        BanHistory::create([
-            'user_id' => $user->id,
-            'admin_id' => Auth::id(),
-            'type' => $request->type,
-            'action' => 'banned',
-            'reason' => $request->reason,
-            'expired_at' => $request->type === 'temporary' ? $request->expired_at : null,
-        ]);
-
-        // 2. Update User Status
-        $user->update([
-            'status_id' => $bannedStatus->id,
-            'ban_expires_at' => $request->type === 'temporary' ? $request->expired_at : null,
-        ]);
-
-        return $this->successResponse($user->load('status'), 'User banned successfully');
+        return $this->successResponse($updatedUser, 'User banned successfully');
     }
 
     /**
      * Restore a user to Active status.
      */
-    public function unban(Request $request, User $user, \App\Services\RoleAndAccountProtectionService $protectionService)
+    public function unban(Request $request, User $user)
     {
-        $protectionService->validateUserModification($user, Auth::user());
-
         $request->validate([
             'reason' => 'required|string|min:5'
         ]);
 
-        $activeStatus = UserStatus::where('name', 'Active')->firstOrFail();
+        $updatedUser = $this->userBanService->unban($user, $request->reason, Auth::user());
 
-        // 1. Log the history
-        BanHistory::create([
-            'user_id' => $user->id,
-            'admin_id' => Auth::id(),
-            'type' => 'permanent', // Unban action is permanent restore
-            'action' => 'restored',
-            'reason' => $request->reason,
-        ]);
-
-        // 2. Update User Status
-        $user->update([
-            'status_id' => $activeStatus->id,
-            'ban_expires_at' => null,
-        ]);
-
-        return $this->successResponse($user->load('status'), 'User restored successfully');
+        return $this->successResponse($updatedUser, 'User restored successfully');
     }
 
     /**
      * Activate a user (set status to Active).
      */
-    public function activate(Request $request, User $user, \App\Services\RoleAndAccountProtectionService $protectionService)
+    public function activate(Request $request, User $user)
     {
-        $protectionService->validateUserActiveDeactive($user);
-
         $request->validate([
             'reason' => 'required|string|min:3'
         ]);
 
-        $status = UserStatus::where('name', 'Active')->firstOrFail();
+        $updatedUser = $this->userBanService->activate($user, $request->reason, Auth::user());
 
-        BanHistory::create([
-            'user_id' => $user->id,
-            'admin_id' => Auth::id(),
-            'type' => 'permanent',
-            'action' => 'activated',
-            'reason' => $request->reason,
-        ]);
-
-        $user->update([
-            'status_id' => $status->id,
-            'ban_expires_at' => null,
-        ]);
-
-        return $this->successResponse($user->load('status'), 'Account activated successfully');
+        return $this->successResponse($updatedUser, 'Account activated successfully');
     }
 
     /**
      * Deactivate a user (set status to Inactive).
      */
-    public function deactivate(Request $request, User $user, \App\Services\RoleAndAccountProtectionService $protectionService)
+    public function deactivate(Request $request, User $user)
     {
-        $protectionService->validateUserActiveDeactive($user);
-
         $request->validate([
             'reason' => 'required|string|min:3'
         ]);
 
-        $status = UserStatus::where('name', 'Inactive')->firstOrFail();
+        $updatedUser = $this->userBanService->deactivate($user, $request->reason, Auth::user());
 
-        BanHistory::create([
-            'user_id' => $user->id,
-            'admin_id' => Auth::id(),
-            'type' => 'permanent',
-            'action' => 'deactivated',
-            'reason' => $request->reason,
-        ]);
-
-        $user->update([
-            'status_id' => $status->id,
-            'ban_expires_at' => null,
-        ]);
-
-        return $this->successResponse($user->load('status'), 'Account deactivated successfully');
+        return $this->successResponse($updatedUser, 'Account deactivated successfully');
     }
 }

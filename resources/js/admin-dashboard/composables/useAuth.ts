@@ -1,11 +1,5 @@
 import { ref, computed } from 'vue';
 
-/**
- * useAuth.ts
- * Manages global authentication state.
- */
-
-// Global singleton state
 const user = ref<any>(JSON.parse(localStorage.getItem('user_data') || 'null'));
 const token = ref<string | null>(localStorage.getItem('auth_token'));
 

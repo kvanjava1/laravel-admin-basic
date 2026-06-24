@@ -44,6 +44,10 @@ class AuthController extends Controller
      */
     public function me(Request $request)
     {
-        return $this->successResponse($request->user()->load(['status', 'roles']), 'User profile retrieved');
+        $user = $request->user()->load(['status', 'roles']);
+        $userData = $user->toArray();
+        $userData['permissions'] = $user->getAllPermissions()->toArray();
+
+        return $this->successResponse($userData, 'User profile retrieved');
     }
 }

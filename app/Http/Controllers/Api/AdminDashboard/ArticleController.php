@@ -35,8 +35,11 @@ class ArticleController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
+        $data = $request->validated();
+        unset($data['author_id']);
+
         $article = $this->articleService->createArticle(
-            $request->validated(),
+            $data,
             $request->user()->id
         );
 
