@@ -30,6 +30,20 @@ docker exec node20.19.1 npm install
 docker exec node20.19.1 npm run dev
 ```
 
+Atau pake shortcut `context/bin/`:
+
+```bash
+# Semua perintah di atas setara dengan:
+context/bin/php artisan serve
+context/bin/composer install
+context/bin/npm run dev
+
+# Container management
+context/bin/container --status
+context/bin/container --start
+context/bin/container --stop
+```
+
 ### Vite Dev Server
 
 Vite is configured to bind to `0.0.0.0:5176` with HMR on `localhost:5176` (see `vite.config.js`).
@@ -60,25 +74,31 @@ Vite is configured to bind to `0.0.0.0:5176` with HMR on `localhost:5176` (see `
 
 ### Test Files
 
+All legacy Breeze tests have been removed. Current tests (56 tests across 8 files):
+
 | File | Coverage Area |
 |------|--------------|
-| `tests/Feature/AdminDashboard/ArticleManagementTest.php` | Article CRUD |
-| `tests/Feature/AdminDashboard/MediaManagementTest.php` | Media upload, edit, delete |
-| `tests/Feature/AdminDashboard/UserProtectionTest.php` | Protected account/role enforcement |
-| `tests/Feature/Auth/AuthenticationTest.php` | Legacy Breeze-style auth tests (may not match current API) |
-| `tests/Feature/Auth/EmailVerificationTest.php` | Legacy (not active in current architecture) |
-| `tests/Feature/Auth/Password*.php` | Legacy password tests |
-| `tests/Feature/Auth/RegistrationTest.php` | Legacy registration tests |
-| `tests/Feature/ProfileTest.php` | Legacy profile test |
-| `tests/Feature/ExampleTest.php` | Default Laravel example |
-| `tests/Unit/ExampleTest.php` | Default Laravel example |
+| `tests/Feature/AdminDashboard/AuthTest.php` | Login, logout, me, banned/inactive rejection |
+| `tests/Feature/AdminDashboard/UserManagementTest.php` | User CRUD, filters, banned status block |
+| `tests/Feature/AdminDashboard/UserBanTest.php` | Ban, unban, activate, deactivate, audit trail |
+| `tests/Feature/AdminDashboard/RoleTest.php` | Role CRUD, permission sync, protected role deletion |
+| `tests/Feature/AdminDashboard/CategoryTest.php` | Category CRUD, tree, self-parenting block |
+| `tests/Feature/AdminDashboard/MediaTest.php` | Media upload, list, filter, update, delete |
+| `tests/Feature/AdminDashboard/ArticleTest.php` | Article CRUD, tags, auto published_at |
+| `tests/Feature/AdminDashboard/ProfileTest.php` | Profile show/update, password change |
 
 ### Testing Notes
 
-- `AdminDashboard/` tests are the **active, current** tests matching the SPA/API architecture
-- `Auth/` and root-level `Feature/` tests are **legacy** from the original Breeze scaffolding — they target web routes that no longer exist
-- Media tests use **explicit cleanup** instead of `RefreshDatabase` to avoid touching the real SQLite file when config cache is stale
-- Run tests: `docker exec php8.2 php artisan test` or `docker exec php8.2 composer test`
+- All tests use `RefreshDatabase` trait with `:memory:` SQLite — **never** touches the real `database/database.sqlite`
+- `tests/bootstrap.php` clears cached config before test run to ensure `:memory:` is used
+- Run tests: `context/bin/php artisan test` or `context/bin/composer test`
+- Some tests include negative assertions (403 for users without required permissions)
+
+## Cache
+
+**Driver:** `file` (set in `.env: CACHE_STORE=file`)
+
+Cache is written to `storage/framework/cache/data/`. No Redis container needed.
 
 ## Scheduled Tasks
 
@@ -117,12 +137,10 @@ The `public` disk requires `php artisan storage:link` to be accessible via web.
 ## Known Technical Debt
 
 1. **Response format inconsistency**: `ArticleController` and `CategoryController` do not use the `ApiResponse` trait, producing a different JSON envelope than other controllers.
-2. **Legacy test files**: 7 test files under `tests/Feature/Auth/` and `tests/Feature/ProfileTest.php` target old Breeze-style web routes and will fail against the current SPA/API architecture.
-3. **Unscheduled command**: `app:release-expired-bans` exists but has no automatic scheduling.
-4. **No permission middleware**: Seeded permissions (`view-users`, `create-users`, etc.) are not enforced at the route or controller level. Only `auth:sanctum` is applied.
-5. **No descendant-cycle protection**: Category hierarchy blocks self-parenting but does not prevent assigning a descendant as a parent (would create a cycle).
-6. **Empty directories**: `store/` and `types/` directories exist in the frontend but are unused.
-7. **Node version mismatch**: Container is named `node20.19.1` but reported `node -v` output is `v18.17.1`.
-8. **Breeze dev dependency**: `laravel/breeze` remains in `composer.json` dev dependencies despite the project having fully migrated to Sanctum API auth.
-9. **Ziggy dependency**: `tightenco/ziggy` is in both backend (composer) and frontend (vite alias), used only for `route()` in frontend services. The web routes file still imports `Inertia\Inertia` (unused).
-10. **Media file cleanup**: Soft-deleted media marks `file_cleanup_marked_at` but there is no command or scheduled task to actually remove the orphaned files from disk.
+2. **Unscheduled command**: `app:release-expired-bans` exists but has no automatic scheduling.
+3. **No descendant-cycle protection**: Category hierarchy blocks self-parenting but does not prevent assigning a descendant as a parent (would create a cycle).
+4. **Empty directories**: `store/` and `types/` directories exist in the frontend but are unused.
+5. **Node version mismatch**: Container is named `node20.19.1` but reported `node -v` output is `v18.17.1`.
+6. **Breeze dev dependency**: `laravel/breeze` remains in `composer.json` dev dependencies despite the project having fully migrated to Sanctum API auth.
+7. **Ziggy dependency**: `tightenco/ziggy` is in both backend (composer) and frontend (vite alias), used only for `route()` in frontend services. The web routes file still imports `Inertia\Inertia` (unused).
+8. **Media file cleanup**: Soft-deleted media marks `file_cleanup_marked_at` but there is no command or scheduled task to actually remove the orphaned files from disk.

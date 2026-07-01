@@ -54,10 +54,10 @@ laravel-admin-basic/
 │   ├── Providers/                # Service providers
 │   ├── Repositories/             # 6 repositories (Article, Category, Media, Role, Tag, User)
 │   ├── Rules/                    # Custom validation rules
-│   ├── Services/                 # 9 services (Article, Auth, Category, Media, Profile, RoleAndAccountProtection, Role, Tag, User)
+│   ├── Services/                 # 10 services (Article, Auth, Category, Media, Profile, RoleAndAccountProtection, Role, Tag, User, UserBan)
 │   └── Traits/                   # ApiResponse, HandlesImageUploads
 ├── bootstrap/
-│   └── app.php                   # Exception handler registration
+│   └── app.php                   # Exception handler + Spatie permission middleware alias
 ├── config/
 │   ├── media.php                 # Media disk, quality, variant sizes
 │   ├── protection.php            # Protected roles and accounts
@@ -82,20 +82,22 @@ laravel-admin-basic/
 │           │   ├── role/         # Role-specific components
 │           │   ├── user/         # User-specific components
 │           │   └── dashboard/    # Dashboard components
-│           ├── composables/      # 14 composables (useApi, useAuth, useArticle*, useCategory*, useMedia*, useProfile*, useRole*, useUser*)
+│           ├── composables/      # 15 composables (useApi, useAuth, usePermission, useArticle*, useCategory*, useMedia*, useProfile*, useRole*, useUser*)
 │           ├── services/         # 8 service files (article, auth, category, media, profile, role, tag, user)
 │           ├── utils/            # sweetalert.ts
 │           ├── store/            # Empty (unused)
 │           └── types/            # Empty (types in service files)
 ├── routes/
-│   ├── api.php                   # 29 API routes
+│   ├── api.php                   # 29 API routes (all with permission middleware)
 │   ├── web.php                   # SPA catch-all (/admin/{any?})
 │   └── console.php               # inspire command only
 ├── tests/
 │   └── Feature/
-│       └── AdminDashboard/       # ArticleManagementTest, MediaManagementTest, UserProtectionTest
-└── context/                      # This folder
-```
+│       └── AdminDashboard/       # 8 test files (56 tests)
+├── context/                      # This folder
+│   ├── docs/                     # Project documentation
+│   └── bin/                      # Docker shortcut scripts (php, composer, npm, container)
+└──
 
 ## Configuration Strategy
 
@@ -150,6 +152,19 @@ Login → Sanctum token created → Token stored in localStorage
 Request → Axios interceptor adds Bearer header → Sanctum middleware validates
 401 → Axios response interceptor clears localStorage and redirects to /admin/login
 ```
+
+### Permission Flow
+
+All API routes behind `auth:sanctum` also require a `permission:*` middleware (Spatie). Every authenticated route is tagged with its required permission slug:
+
+```
+Route::middleware('auth:sanctum')  // 401 if no token
+  → Route::middleware('permission:view-users')  // 403 if user lacks permission
+    → Controller checks RoleAndAccountProtectionService for protected entities
+      → Frontend uses usePermission().can(perm) to hide/show UI elements
+```
+
+Permissions are returned in the login and me responses via `getAllPermissions()` (inherited via Spatie roles, not direct assignment).
 
 ### Image Processing Pipeline
 

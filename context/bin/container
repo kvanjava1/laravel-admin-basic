@@ -1,0 +1,37 @@
+#!/bin/bash
+set -e
+
+CONTAINERS="php8.2 node20.19.1 nginx_php_dev"
+
+case "${1:---status}" in
+  --start)
+    for c in $CONTAINERS; do
+      if docker ps --format '{{.Names}}' | grep -q "^$c$"; then
+        echo "$c already running"
+      else
+        echo "Starting $c..."
+        docker start "$c" 2>/dev/null || echo "Warning: $c not found"
+      fi
+    done
+    ;;
+  --stop)
+    for c in $CONTAINERS; do
+      if docker ps --format '{{.Names}}' | grep -q "^$c$"; then
+        echo "Stopping $c..."
+        docker stop "$c"
+      else
+        echo "$c not running"
+      fi
+    done
+    ;;
+  --status)
+    for c in $CONTAINERS; do
+      state=$(docker ps --all --format '{{.Names}}\t{{.State}}' | grep "^$c" | awk '{print $2}')
+      echo "$c: ${state:-not found}"
+    done
+    ;;
+  *)
+    echo "Usage: $0 [--start|--stop|--status]"
+    exit 1
+    ;;
+esac

@@ -1,0 +1,2 @@
+#!/bin/bash
+exec docker exec -w /var/www/php/php8.2/laravel-admin-basic php8.2 php "$@"

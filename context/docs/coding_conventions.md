@@ -90,8 +90,27 @@ Service throws ApiException(message, statusCode)
 
 - Route names use resource-style naming: `users.index`, `roles.update`, `categories.groups`
 - Authenticated API routes grouped under `auth:sanctum` middleware
+- Each route also requires a `permission:*` middleware matching its action
 - SPA catch-all in `routes/web.php`: `/admin/{any?}`
 - Custom endpoints break out of resource pattern when needed (e.g., `users/{user}/ban`)
+
+### Permission Middleware
+
+Declared in `bootstrap/app.php`:
+```php
+$middleware->alias([
+    'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+]);
+```
+
+Applied per-route in `routes/api.php`:
+```php
+Route::get('/users', [UserManagementController::class, 'index'])
+    ->middleware('permission:view-users')->name('users.index');
+Route::post('/users', [UserManagementController::class, 'store'])
+    ->middleware('permission:create-users')->name('users.store');
+```
+Do not use `->middleware()` inside `->group()` — apply inline on each route for clarity.
 
 ### Naming Conventions (Backend)
 
@@ -123,6 +142,7 @@ Service throws ApiException(message, statusCode)
 - Manage `ref`, `computed`, `watch` for page/module state
 - Use `alertService` (from `utils/sweetalert.ts`) for user feedback
 - Expose only the state and methods the view needs
+- Permission checking: use `usePermission` composable with `can(permissionSlug)`
 
 ### Service Conventions
 
@@ -204,7 +224,8 @@ if (result.isConfirmed) { ... }
 ## Practical Rules For Changes
 
 1. **Follow the target module's patterns** — if the module uses `ApiResponse`, your changes should too.
-2. **Check for existing utilities** before creating new ones — `alertService`, `useApi`, `HandlesImageUploads` already exist.
+2. **Check for existing utilities** before creating new ones — `alertService`, `useApi`, `usePermission`, `HandlesImageUploads` already exist.
 3. **Do not mix response formats** — use `ApiResponse` trait unless you are in a module that already uses raw `response()->json()`.
 4. **New modules should follow the dominant pattern**: Controller (thin) → Service (business logic) → Repository (queries).
-5. **Preserve all existing comments and docblocks** unless they are directly contradicted by your changes.
+5. **Always add a `permission:*` middleware to new authenticated routes** — create the permission slug in the seeder and add to `Super Administrator`.
+6. **Preserve all existing comments and docblocks** unless they are directly contradicted by your changes.

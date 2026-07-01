@@ -85,12 +85,29 @@ Seeded permissions:
 
 | Permission Slug | Group |
 |----------------|-------|
-| `view-users` | USER MANAGEMENT |
-| `create-users` | USER MANAGEMENT |
-| `edit-users` | USER MANAGEMENT |
-| `delete-users` | USER MANAGEMENT |
+| `view-users` | User Management |
+| `create-users` | User Management |
+| `edit-users` | User Management |
+| `delete-users` | User Management |
+| `govern-users` | User Management |
+| `view-roles` | Role Management |
+| `create-roles` | Role Management |
+| `edit-roles` | Role Management |
+| `delete-roles` | Role Management |
+| `view-categories` | Category Management |
+| `create-categories` | Category Management |
+| `edit-categories` | Category Management |
+| `delete-categories` | Category Management |
+| `view-media` | Media Management |
+| `create-media` | Media Management |
+| `edit-media` | Media Management |
+| `delete-media` | Media Management |
+| `view-articles` | Article Management |
+| `create-articles` | Article Management |
+| `edit-articles` | Article Management |
+| `delete-articles` | Article Management |
 
-Seeded roles: `Super Administrator` (has all permissions).
+Seeded roles: `Super Administrator` (has all permissions via `syncPermissions()`). Permissions are enforced at route level via `permission:*` middleware (Spatie).
 
 ### CategoryGroup
 

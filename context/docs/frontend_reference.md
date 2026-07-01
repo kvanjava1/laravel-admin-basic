@@ -62,7 +62,7 @@ All routes use **lazy-loaded** components. Routes are grouped by module arrays t
 | Component | Purpose |
 |-----------|---------|
 | `AdminLayout.vue` | Main shell: sidebar + header + `<router-view>`. Responsive with mobile overlay. |
-| `Sidebar.vue` | Navigation sidebar with module links |
+| `Sidebar.vue` | Navigation sidebar with module links filtered by `usePermission` |
 | `Header.vue` | Top bar with page title and sidebar toggle |
 
 ### Base UI (`components/ui/`)
@@ -118,6 +118,7 @@ Atomic, reusable components used across all modules:
 | `useUserForm.ts` | User | User create/edit form |
 | `useUserList.ts` | User | Paginated user list with filters |
 | `useUserStatus.ts` | User | Governance actions (ban, restore, activate, deactivate) |
+| `usePermission.ts` | Core | Permission checker (`can(perm)`, `canAny(...perms)`) backed by `user.permissions` from auth response |
 
 ## Services (`services/`)
 
@@ -155,6 +156,23 @@ All services export an object literal and use `useApi()` for HTTP calls. Named r
 | `views/post/article/` | `ArticleIndex`, `ArticleCreate`, `ArticleEdit` | Article CMS |
 
 Note: Article views are nested under `views/post/article/` (not `views/article/`). This accommodates potential future post types under the `post/` namespace.
+
+## Permissions
+
+Permissions from the API login/me response (`user.permissions`) are checked via `usePermission()`:
+
+```typescript
+import { usePermission } from '../composables/usePermission';
+const { can, canAny } = usePermission();
+
+// Hide button if user lacks permission
+<BaseButton v-if="can('create-users')">Add User</BaseButton>
+
+// Hide section if user lacks any of these
+<div v-if="canAny('view-media', 'view-articles')">...</div>
+```
+
+The `Sidebar.vue` uses `can()` to show/hide navigation menus based on `view-*` permissions.
 
 ## Utilities (`utils/`)
 
